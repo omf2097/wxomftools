@@ -35,6 +35,15 @@ class BaseFrame : public wxFrame
 		wxMenuBar* base_menu_bar;
 		wxMenu* menu_file;
 		wxMenu* menu_help;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void onMenuNew( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onMenuOpen( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onMenuSave( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onMenuSaveAs( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onMenuExit( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onMenuAbout( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		

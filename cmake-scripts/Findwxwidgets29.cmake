@@ -12,7 +12,7 @@ FIND_PATH(WXWIDGETS_INCLUDE_DIR wx/wx.h
 )
 
 IF(MINGW)
-    SET(SEARCH_LIBS wx_mswu_core-2.9 wx_baseu-2.9 wxjpeg-2.9 wxpng-2.9 wxzlib-2.9 )
+    SET(SEARCH_LIBS wx_mswu_adv-2.9 wx_mswu_core-2.9 wx_baseu-2.9 wxjpeg-2.9 wxpng-2.9 wxzlib-2.9 )
 ELSE(MINGW)
     SET(SEARCH_LIBS wx_baseu-2.9)
 ENDIF(MINGW)
