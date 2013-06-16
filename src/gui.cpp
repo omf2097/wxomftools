@@ -48,6 +48,175 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	this->SetMenuBar( base_menu_bar );
 	
+	wxBoxSizer* base_sizer;
+	base_sizer = new wxBoxSizer( wxVERTICAL );
+	
+	base_tabs = new wxAuiNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	tab_info = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxGridSizer* info_base_sizer;
+	info_base_sizer = new wxGridSizer( 2, 2, 0, 0 );
+	
+	wxStaticBoxSizer* info_generic_sizer;
+	info_generic_sizer = new wxStaticBoxSizer( new wxStaticBox( tab_info, wxID_ANY, wxT("File information") ), wxVERTICAL );
+	
+	wxFlexGridSizer* info_generic_fg;
+	info_generic_fg = new wxFlexGridSizer( 0, 2, 0, 0 );
+	info_generic_fg->SetFlexibleDirection( wxBOTH );
+	info_generic_fg->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxStaticText* info_key_fileid;
+	info_key_fileid = new wxStaticText( tab_info, wxID_ANY, wxT("File ID:"), wxDefaultPosition, wxDefaultSize, 0 );
+	info_key_fileid->Wrap( -1 );
+	info_generic_fg->Add( info_key_fileid, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	info_value_fileid = new wxTextCtrl( tab_info, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	info_generic_fg->Add( info_value_fileid, 0, wxALL, 5 );
+	
+	
+	info_generic_sizer->Add( info_generic_fg, 1, wxEXPAND, 0 );
+	
+	
+	info_base_sizer->Add( info_generic_sizer, 1, wxALL|wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* info_palette_sizer;
+	info_palette_sizer = new wxStaticBoxSizer( new wxStaticBox( tab_info, wxID_ANY, wxT("Palette information") ), wxVERTICAL );
+	
+	wxFlexGridSizer* info_palette_fg;
+	info_palette_fg = new wxFlexGridSizer( 0, 2, 0, 0 );
+	info_palette_fg->SetFlexibleDirection( wxBOTH );
+	info_palette_fg->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxStaticText* info_key_palettec;
+	info_key_palettec = new wxStaticText( tab_info, wxID_ANY, wxT("Palette count:"), wxDefaultPosition, wxDefaultSize, 0 );
+	info_key_palettec->Wrap( -1 );
+	info_palette_fg->Add( info_key_palettec, 0, wxALL, 5 );
+	
+	info_value_palettec = new wxStaticText( tab_info, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, 0 );
+	info_value_palettec->Wrap( -1 );
+	info_palette_fg->Add( info_value_palettec, 0, wxALL, 5 );
+	
+	wxStaticText* info_key_overlayc;
+	info_key_overlayc = new wxStaticText( tab_info, wxID_ANY, wxT("Overlay count:"), wxDefaultPosition, wxDefaultSize, 0 );
+	info_key_overlayc->Wrap( -1 );
+	info_palette_fg->Add( info_key_overlayc, 0, wxALL, 5 );
+	
+	info_value_overlayc = new wxStaticText( tab_info, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, 0 );
+	info_value_overlayc->Wrap( -1 );
+	info_palette_fg->Add( info_value_overlayc, 0, wxALL, 5 );
+	
+	
+	info_palette_sizer->Add( info_palette_fg, 1, wxEXPAND, 0 );
+	
+	
+	info_base_sizer->Add( info_palette_sizer, 1, wxALL|wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* info_bg_sizer;
+	info_bg_sizer = new wxStaticBoxSizer( new wxStaticBox( tab_info, wxID_ANY, wxT("Background information") ), wxVERTICAL );
+	
+	wxFlexGridSizer* info_bg_fg;
+	info_bg_fg = new wxFlexGridSizer( 0, 2, 0, 0 );
+	info_bg_fg->SetFlexibleDirection( wxBOTH );
+	info_bg_fg->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxStaticText* info_key_bgw;
+	info_key_bgw = new wxStaticText( tab_info, wxID_ANY, wxT("Width:"), wxDefaultPosition, wxDefaultSize, 0 );
+	info_key_bgw->Wrap( -1 );
+	info_bg_fg->Add( info_key_bgw, 0, wxALL, 5 );
+	
+	info_value_bgw = new wxStaticText( tab_info, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, 0 );
+	info_value_bgw->Wrap( -1 );
+	info_bg_fg->Add( info_value_bgw, 0, wxALL, 5 );
+	
+	wxStaticText* info_key_bgh;
+	info_key_bgh = new wxStaticText( tab_info, wxID_ANY, wxT("Height:"), wxDefaultPosition, wxDefaultSize, 0 );
+	info_key_bgh->Wrap( -1 );
+	info_bg_fg->Add( info_key_bgh, 0, wxALL, 5 );
+	
+	info_value_bgh = new wxStaticText( tab_info, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, 0 );
+	info_value_bgh->Wrap( -1 );
+	info_bg_fg->Add( info_value_bgh, 0, wxALL, 5 );
+	
+	
+	info_bg_sizer->Add( info_bg_fg, 1, wxEXPAND, 0 );
+	
+	
+	info_base_sizer->Add( info_bg_sizer, 1, wxALL|wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* info_anim_sizer;
+	info_anim_sizer = new wxStaticBoxSizer( new wxStaticBox( tab_info, wxID_ANY, wxT("Animations information") ), wxVERTICAL );
+	
+	wxFlexGridSizer* info_anim_fg;
+	info_anim_fg = new wxFlexGridSizer( 0, 2, 0, 0 );
+	info_anim_fg->SetFlexibleDirection( wxBOTH );
+	info_anim_fg->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxStaticText* info_key_animationc;
+	info_key_animationc = new wxStaticText( tab_info, wxID_ANY, wxT("Animation count:"), wxDefaultPosition, wxDefaultSize, 0 );
+	info_key_animationc->Wrap( -1 );
+	info_anim_fg->Add( info_key_animationc, 0, wxALL, 5 );
+	
+	info_value_animationc = new wxStaticText( tab_info, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, 0 );
+	info_value_animationc->Wrap( -1 );
+	info_anim_fg->Add( info_value_animationc, 0, wxALL, 5 );
+	
+	
+	info_anim_sizer->Add( info_anim_fg, 1, wxEXPAND, 0 );
+	
+	
+	info_base_sizer->Add( info_anim_sizer, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	tab_info->SetSizer( info_base_sizer );
+	tab_info->Layout();
+	info_base_sizer->Fit( tab_info );
+	base_tabs->AddPage( tab_info, wxT("Information"), false, wxNullBitmap );
+	tab_background = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* bg_base_sizer;
+	bg_base_sizer = new wxFlexGridSizer( 1, 2, 0, 0 );
+	bg_base_sizer->AddGrowableCol( 1 );
+	bg_base_sizer->AddGrowableRow( 0 );
+	bg_base_sizer->SetFlexibleDirection( wxBOTH );
+	bg_base_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxPanel* bg_ctrl_panel;
+	bg_ctrl_panel = new wxPanel( tab_background, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* bg_ctrl_sizer;
+	bg_ctrl_sizer = new wxFlexGridSizer( 0, 1, 0, 0 );
+	bg_ctrl_sizer->SetFlexibleDirection( wxBOTH );
+	bg_ctrl_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	bg_ctrl_load_button = new wxButton( bg_ctrl_panel, wxID_ANY, wxT("Load from ..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bg_ctrl_sizer->Add( bg_ctrl_load_button, 0, wxALL|wxEXPAND, 5 );
+	
+	bg_ctrl_save_button = new wxButton( bg_ctrl_panel, wxID_ANY, wxT("Save to ..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bg_ctrl_sizer->Add( bg_ctrl_save_button, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	bg_ctrl_panel->SetSizer( bg_ctrl_sizer );
+	bg_ctrl_panel->Layout();
+	bg_ctrl_sizer->Fit( bg_ctrl_panel );
+	bg_base_sizer->Add( bg_ctrl_panel, 1, wxEXPAND | wxALL, 0 );
+	
+	bg_image_panel = new wxPanel( tab_background, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+	bg_image_panel->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
+	
+	bg_base_sizer->Add( bg_image_panel, 1, wxEXPAND | wxALL, 0 );
+	
+	
+	tab_background->SetSizer( bg_base_sizer );
+	tab_background->Layout();
+	bg_base_sizer->Fit( tab_background );
+	base_tabs->AddPage( tab_background, wxT("Background"), true, wxNullBitmap );
+	tab_palette = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	base_tabs->AddPage( tab_palette, wxT("Palette"), false, wxNullBitmap );
+	tab_animations = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	base_tabs->AddPage( tab_animations, wxT("Animations"), false, wxNullBitmap );
+	
+	base_sizer->Add( base_tabs, 1, wxEXPAND | wxALL, 0 );
+	
+	
+	this->SetSizer( base_sizer );
+	this->Layout();
 	
 	this->Centre( wxBOTH );
 	
@@ -58,6 +227,8 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( menuitem_saveas->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BaseFrame::onMenuSaveAs ) );
 	this->Connect( menuitem_exit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BaseFrame::onMenuExit ) );
 	this->Connect( menu_about->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BaseFrame::onMenuAbout ) );
+	bg_ctrl_load_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onBackgroundLoad ), NULL, this );
+	bg_ctrl_save_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onBackgroundSave ), NULL, this );
 }
 
 BaseFrame::~BaseFrame()
@@ -69,5 +240,7 @@ BaseFrame::~BaseFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BaseFrame::onMenuSaveAs ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BaseFrame::onMenuExit ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BaseFrame::onMenuAbout ) );
+	bg_ctrl_load_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onBackgroundLoad ), NULL, this );
+	bg_ctrl_save_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onBackgroundSave ), NULL, this );
 	
 }
