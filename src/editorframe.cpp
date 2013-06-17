@@ -4,26 +4,42 @@
 #include <wx/aboutdlg.h>
 
 EditorFrame::EditorFrame(wxFrame *frame) : BaseFrame(frame) {
-    // Load handlers
+    // Initialize
+    m_filedata = NULL;
+    reset();
+
+    // Load wx image handlers
     wxImage::AddHandler(new wxPNGHandler);
-    
-    this->updateTitle();
 }
 
 EditorFrame::~EditorFrame() {
+    if(m_filedata != NULL) {
+        sd_bk_delete(m_filedata);
+    }
+}
 
+void EditorFrame::reset() {
+    m_filename = "";
+    if(m_filedata != NULL) {
+        sd_bk_delete(m_filedata);
+        m_filedata = NULL;
+    }
+    updateTitle();
+    m_filedata = sd_bk_create();
 }
 
 void EditorFrame::updateTitle() {
-    wxString title(_("wxBKEditor - "));
-    if(fname.length() > 128) {
-        title.append(fname.SubString(0, 48));
+    wxString title(_("wxBKEditor"));
+    if(m_filename.length() > 128) {
+        title.append(" - ");
+        title.append(m_filename.SubString(0, 48));
         title.append(_(" ... "));
-        title.append(fname.SubString(fname.length()-48, 48));
-    } else {
-        title.append(fname);
+        title.append(m_filename.SubString(m_filename.length()-48, 48));
+    } else if(m_filename.length() > 0) {
+        title.append(" - ");
+        title.append(m_filename);
     }
-    this->SetTitle(title);
+    SetTitle(title);
 }
 
 void EditorFrame::onMenuExit(wxCommandEvent& event) {

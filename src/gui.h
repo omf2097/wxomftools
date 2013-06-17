@@ -64,6 +64,10 @@ class BaseFrame : public wxFrame
 		wxChoice* palette_ctrl_select_overlay;
 		wxButton* palette_ctrl_load_button;
 		wxButton* palette_ctrl_save_button;
+		wxButton* palette_ctrl_delpal_button;
+		wxButton* palette_ctrl_deloverlay_button;
+		wxButton* palette_ctrl_newpal_button;
+		wxButton* palette_ctrl_newoverlay_button;
 		wxPanel* palette_grid_panel;
 		wxGridSizer* palette_grid_sizer;
 		wxPanel* tab_animations;
@@ -87,6 +91,10 @@ class BaseFrame : public wxFrame
 		virtual void onOverlayChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPaletteLoad( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPaletteSave( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onPaletteDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onOverlayDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onNewPalette( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onNewOverlay( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onSpriteMouseEvent( wxMouseEvent& event ) { event.Skip(); }
 		
 	

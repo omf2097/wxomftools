@@ -69,7 +69,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	info_key_fileid->Wrap( -1 );
 	info_generic_fg->Add( info_key_fileid, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	info_value_fileid = new wxTextCtrl( tab_info, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	info_value_fileid = new wxTextCtrl( tab_info, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, 0 );
 	info_generic_fg->Add( info_value_fileid, 0, wxALL, 5 );
 	
 	
@@ -169,7 +169,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	tab_info->SetSizer( info_base_sizer );
 	tab_info->Layout();
 	info_base_sizer->Fit( tab_info );
-	base_tabs->AddPage( tab_info, wxT("Information"), false, wxNullBitmap );
+	base_tabs->AddPage( tab_info, wxT("Information"), true, wxNullBitmap );
 	tab_background = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* bg_base_sizer;
 	bg_base_sizer = new wxFlexGridSizer( 1, 2, 0, 0 );
@@ -231,11 +231,41 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	palette_ctrl_select_overlay->SetSelection( 0 );
 	palette_ctrl_sizer->Add( palette_ctrl_select_overlay, 0, wxALL, 5 );
 	
+	wxStaticBoxSizer* palette_ctrl_pal_box;
+	palette_ctrl_pal_box = new wxStaticBoxSizer( new wxStaticBox( palette_ctrl_panel, wxID_ANY, wxT("Selected palette") ), wxVERTICAL );
+	
 	palette_ctrl_load_button = new wxButton( palette_ctrl_panel, wxID_ANY, wxT("Load"), wxDefaultPosition, wxDefaultSize, 0 );
-	palette_ctrl_sizer->Add( palette_ctrl_load_button, 0, wxALL|wxEXPAND, 5 );
+	palette_ctrl_pal_box->Add( palette_ctrl_load_button, 0, wxALL|wxEXPAND, 5 );
 	
 	palette_ctrl_save_button = new wxButton( palette_ctrl_panel, wxID_ANY, wxT("Save"), wxDefaultPosition, wxDefaultSize, 0 );
-	palette_ctrl_sizer->Add( palette_ctrl_save_button, 0, wxALL|wxEXPAND, 5 );
+	palette_ctrl_pal_box->Add( palette_ctrl_save_button, 0, wxALL|wxEXPAND, 5 );
+	
+	palette_ctrl_delpal_button = new wxButton( palette_ctrl_panel, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
+	palette_ctrl_pal_box->Add( palette_ctrl_delpal_button, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	palette_ctrl_sizer->Add( palette_ctrl_pal_box, 1, wxALL|wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* palette_ctrl_overlay_box;
+	palette_ctrl_overlay_box = new wxStaticBoxSizer( new wxStaticBox( palette_ctrl_panel, wxID_ANY, wxT("Selected overlay") ), wxVERTICAL );
+	
+	palette_ctrl_deloverlay_button = new wxButton( palette_ctrl_panel, wxID_ANY, wxT("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
+	palette_ctrl_overlay_box->Add( palette_ctrl_deloverlay_button, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	palette_ctrl_sizer->Add( palette_ctrl_overlay_box, 1, wxALL|wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* palette_ctrl_manage_box;
+	palette_ctrl_manage_box = new wxStaticBoxSizer( new wxStaticBox( palette_ctrl_panel, wxID_ANY, wxT("Create ... ") ), wxVERTICAL );
+	
+	palette_ctrl_newpal_button = new wxButton( palette_ctrl_panel, wxID_ANY, wxT("New palette"), wxDefaultPosition, wxDefaultSize, 0 );
+	palette_ctrl_manage_box->Add( palette_ctrl_newpal_button, 0, wxALL|wxEXPAND, 5 );
+	
+	palette_ctrl_newoverlay_button = new wxButton( palette_ctrl_panel, wxID_ANY, wxT("New overlay"), wxDefaultPosition, wxDefaultSize, 0 );
+	palette_ctrl_manage_box->Add( palette_ctrl_newoverlay_button, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	palette_ctrl_sizer->Add( palette_ctrl_manage_box, 1, wxALL|wxEXPAND, 5 );
 	
 	
 	palette_ctrl_panel->SetSizer( palette_ctrl_sizer );
@@ -303,7 +333,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	tab_animations->SetSizer( animations_base_sizer );
 	tab_animations->Layout();
 	animations_base_sizer->Fit( tab_animations );
-	base_tabs->AddPage( tab_animations, wxT("Animations"), true, wxNullBitmap );
+	base_tabs->AddPage( tab_animations, wxT("Animations"), false, wxNullBitmap );
 	
 	base_sizer->Add( base_tabs, 1, wxEXPAND | wxALL, 0 );
 	
@@ -340,6 +370,10 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	palette_ctrl_select_overlay->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( BaseFrame::onOverlayChoice ), NULL, this );
 	palette_ctrl_load_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onPaletteLoad ), NULL, this );
 	palette_ctrl_save_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onPaletteSave ), NULL, this );
+	palette_ctrl_delpal_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onPaletteDelete ), NULL, this );
+	palette_ctrl_deloverlay_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onOverlayDelete ), NULL, this );
+	palette_ctrl_newpal_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onNewPalette ), NULL, this );
+	palette_ctrl_newoverlay_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onNewOverlay ), NULL, this );
 	animations_sprite_panel->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
 	animations_sprite_panel->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
 	animations_sprite_panel->Connect( wxEVT_MIDDLE_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
@@ -384,6 +418,10 @@ BaseFrame::~BaseFrame()
 	palette_ctrl_select_overlay->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( BaseFrame::onOverlayChoice ), NULL, this );
 	palette_ctrl_load_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onPaletteLoad ), NULL, this );
 	palette_ctrl_save_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onPaletteSave ), NULL, this );
+	palette_ctrl_delpal_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onPaletteDelete ), NULL, this );
+	palette_ctrl_deloverlay_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onOverlayDelete ), NULL, this );
+	palette_ctrl_newpal_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onNewPalette ), NULL, this );
+	palette_ctrl_newoverlay_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onNewOverlay ), NULL, this );
 	animations_sprite_panel->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
 	animations_sprite_panel->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
 	animations_sprite_panel->Disconnect( wxEVT_MIDDLE_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );

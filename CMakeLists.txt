@@ -7,7 +7,7 @@ find_package(shadowdive)
 
 set(CMAKE_C_FLAGS "-Wall -std=c++11 -ggdb -Werror")
 set(CMAKE_C_FLAGS_DEBUG "-Wall -std=c++11 -ggdb -Werror")
-set(CMAKE_C_FLAGS_RELEASE "-Wall -std=c++11 -O2 -march=native -Werror")
+set(CMAKE_C_FLAGS_RELEASE "-Wall -std=c++11 -O2 -march=native -Werror -s")
 
 add_executable(wxbkeditor 
     src/gui.cpp
@@ -21,13 +21,13 @@ set(COREINCS
     ${SHADOWDIVE_INCLUDE_DIR} 
 )
 
-set(CORELIBS 
-    ${WXWIDGETS_LIBRARY} 
-    ${SHADOWDIVE_LIBRARY} 
+set(CORELIBS
+    ${WXWIDGETS_LIBRARY}
+    ${SHADOWDIVE_LIBRARY}
 )
 
 IF(MINGW)
-    set(CORELIBS mingw32 ${CORELIBS} comctl32 )
+    set(CORELIBS mingw32 ${CORELIBS} comctl32)
 ENDIF(MINGW)
 
 include_directories(${COREINCS})
