@@ -25,6 +25,7 @@
 #include <wx/statbox.h>
 #include <wx/panel.h>
 #include <wx/button.h>
+#include <wx/choice.h>
 #include <wx/aui/auibook.h>
 #include <wx/frame.h>
 
@@ -55,6 +56,12 @@ class BaseFrame : public wxFrame
 		wxButton* bg_ctrl_save_button;
 		wxPanel* bg_image_panel;
 		wxPanel* tab_palette;
+		wxPanel* palette_ctrl_panel;
+		wxChoice* palette_ctrl_select_palette;
+		wxChoice* palette_ctrl_select_overlay;
+		wxButton* palette_ctrl_load_button;
+		wxButton* palette_ctrl_save_button;
+		wxPanel* palette_grid_panel;
 		wxPanel* tab_animations;
 		
 		// Virtual event handlers, overide them in your derived class
@@ -66,6 +73,8 @@ class BaseFrame : public wxFrame
 		virtual void onMenuAbout( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onBackgroundLoad( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onBackgroundSave( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onBackgroundMouseEvent( wxMouseEvent& event ) { event.Skip(); }
+		virtual void onBackgroundPaint( wxPaintEvent& event ) { event.Skip(); }
 		
 	
 	public:
