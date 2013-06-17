@@ -26,6 +26,9 @@
 #include <wx/panel.h>
 #include <wx/button.h>
 #include <wx/choice.h>
+#include <wx/treectrl.h>
+#include <wx/html/htmlwin.h>
+#include <wx/splitter.h>
 #include <wx/aui/auibook.h>
 #include <wx/frame.h>
 
@@ -62,7 +65,12 @@ class BaseFrame : public wxFrame
 		wxButton* palette_ctrl_load_button;
 		wxButton* palette_ctrl_save_button;
 		wxPanel* palette_grid_panel;
+		wxGridSizer* palette_grid_sizer;
 		wxPanel* tab_animations;
+		wxTreeCtrl* animations_tree;
+		wxSplitterWindow* animations_splitter;
+		wxPanel* animations_sprite_panel;
+		wxHtmlWindow* animations_info;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onMenuNew( wxCommandEvent& event ) { event.Skip(); }
@@ -75,6 +83,11 @@ class BaseFrame : public wxFrame
 		virtual void onBackgroundSave( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onBackgroundMouseEvent( wxMouseEvent& event ) { event.Skip(); }
 		virtual void onBackgroundPaint( wxPaintEvent& event ) { event.Skip(); }
+		virtual void onPaletteChoice( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onOverlayChoice( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onPaletteLoad( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onPaletteSave( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onSpriteMouseEvent( wxMouseEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -82,6 +95,12 @@ class BaseFrame : public wxFrame
 		BaseFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxBKEditor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~BaseFrame();
+		
+		void animations_splitterOnIdle( wxIdleEvent& )
+		{
+			animations_splitter->SetSashPosition( 361 );
+			animations_splitter->Disconnect( wxEVT_IDLE, wxIdleEventHandler( BaseFrame::animations_splitterOnIdle ), NULL, this );
+		}
 	
 };
 
