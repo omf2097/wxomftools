@@ -10,12 +10,18 @@ AnimationTreeDataItem::AnimationTreeDataItem(sd_sprite *sprite) : wxTreeItemData
     this->animation = NULL;
 }
 
+AnimationTreeDataItem::AnimationTreeDataItem() : wxTreeItemData() {
+    this->sprite = NULL;
+    this->animation = NULL;
+}
 
 int AnimationTreeDataItem::getType() {
     if(this->sprite != NULL) {
         return SPRITE;
-    } else {
+    } else if(this->animation != NULL) {
         return ANIMATION;
+    } else {
+        return EMPTY;
     }
 }
 

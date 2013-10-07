@@ -144,7 +144,8 @@ void EditorFrame::refreshFields() {
     
     // Load up animations
     animations_tree->DeleteAllItems();
-    wxTreeItemId root_index = animations_tree->AddRoot(_("Animations"));
+    wxTreeItemData *root_data = new AnimationTreeDataItem();
+    wxTreeItemId root_index = animations_tree->AddRoot(_("Animations"), -1, -1, root_data);
     for(int i = 0; i < 50; i++) {
         if(m_filedata->anims[i] == NULL) continue;
         sd_bk_anim *bka = m_filedata->anims[i];

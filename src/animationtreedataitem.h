@@ -8,9 +8,11 @@ class AnimationTreeDataItem : public wxTreeItemData {
 public:
     static const int ANIMATION = 0;
     static const int SPRITE = 1;
+    static const int EMPTY = 2;
 
     AnimationTreeDataItem(sd_animation *animation);
     AnimationTreeDataItem(sd_sprite *sprite);
+    AnimationTreeDataItem();
 
     int getType();
     sd_animation* getAnimation();
