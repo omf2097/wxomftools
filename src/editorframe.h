@@ -16,6 +16,10 @@ protected:
     virtual void onMenuAbout(wxCommandEvent& event);
     virtual void onMenuOpen(wxCommandEvent& event);
     virtual void onBackgroundSave(wxCommandEvent& event);
+    virtual void onPaletteChoice(wxCommandEvent& event);
+	virtual void onRemapChoice(wxCommandEvent& event);
+    virtual void onPaletteLoad(wxCommandEvent& event);
+    virtual void onPaletteSave(wxCommandEvent& event);
     
 public:
     EditorFrame(wxFrame *frame);
@@ -27,6 +31,7 @@ public:
     void updateTitle();
     void reset();
     void refreshFields();
+    void showSelectedPalette();
 };
 
 #endif // _EDITORFRAME_H

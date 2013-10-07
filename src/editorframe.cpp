@@ -148,8 +148,94 @@ void EditorFrame::refreshFields() {
         }
     }
     
+    // Palettes & overlays
+    palette_ctrl_select_palette->Clear();
+    for(int i = 0; i < m_filedata->num_palettes; i++) {
+        wxString pal_name(_("Palette "));
+        pal_name << i;
+        palette_ctrl_select_palette->Append(pal_name);
+    }
+    palette_ctrl_select_palette->SetSelection(m_pal);
+    
+    // Overlays
+    palette_ctrl_select_remap->Clear();
+    palette_ctrl_select_remap->Append(_("None"));
+    for(int i = 0; i < 18; i++) {
+        wxString remap_name(_("Remapping "));
+        remap_name << i;
+        palette_ctrl_select_remap->Append(remap_name);
+    }
+    palette_ctrl_select_remap->SetSelection(m_remap);
+    
+    // Show palette
+    this->showSelectedPalette();
+    
     // Request for refresh
     this->Refresh();
+}
+
+void EditorFrame::onPaletteChoice(wxCommandEvent& event) {
+    event.StopPropagation();
+    m_pal = palette_ctrl_select_palette->GetSelection();
+    showSelectedPalette();
+}
+
+void EditorFrame::onRemapChoice(wxCommandEvent& event) {
+    event.StopPropagation();
+    m_remap = palette_ctrl_select_remap->GetSelection();
+    showSelectedPalette();
+}
+
+void EditorFrame::showSelectedPalette() {
+    this->palette_grid_sizer->Clear(true);
+
+    // Get palette table
+    sd_palette *pal = m_filedata->palettes[m_pal];
+
+    // Draw buttons
+    wxStaticText *label;
+    uint8_t r,g,b;
+    palette_grid_panel->Freeze();
+    for(int i = 0; i < 256; i++) {
+        // Find color
+        if(m_remap > 0) {
+            r = pal->data[(int)pal->remaps[m_remap-1][i]][0];
+            g = pal->data[(int)pal->remaps[m_remap-1][i]][1];
+            b = pal->data[(int)pal->remaps[m_remap-1][i]][2];
+        } else {
+            r = pal->data[i][0];
+            g = pal->data[i][1];
+            b = pal->data[i][2];
+        }
+
+        // Create color area + add it to the sizer
+        label = new wxStaticText(palette_grid_panel, wxID_ANY, wxDecToHex(i));
+        label->SetBackgroundColour(wxColour(r,g,b));
+        label->SetForegroundColour(wxColour(255,255,255));
+        //label->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(wxBKEditorFrame::onChangePaletteColor), NULL, this);
+        this->palette_grid_sizer->Add(label, 1, wxEXPAND, 0);
+    }
+
+    // Update panel and sizer contents
+    palette_grid_panel->Thaw();
+    this->palette_grid_panel->Layout();
+    this->palette_grid_sizer->FitInside(this->palette_grid_panel);
+    this->Update();
+}
+
+void EditorFrame::onPaletteLoad(wxCommandEvent& event) {
+
+}
+
+void EditorFrame::onPaletteSave(wxCommandEvent& event) {
+    // Ask the user where to save
+    wxFileDialog sd(this, _("GPL (Gimp Palette)"), _(""), _(""), _("GPL files (*.gpl)|*.gpl"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
+    if (sd.ShowModal() != wxID_OK) {
+        return;
+    }
+
+    // Save
+    sd_palette_to_gimp_palette((char*)sd.GetPath().mb_str().data(), m_filedata->palettes[m_pal]);
 }
 
 void EditorFrame::onBackgroundSave(wxCommandEvent& event) {

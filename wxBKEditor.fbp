@@ -2229,7 +2229,7 @@
                                                         <property name="minimize_button">0</property>
                                                         <property name="minimum_size"></property>
                                                         <property name="moveable">1</property>
-                                                        <property name="name">palette_ctrl_select_overlay</property>
+                                                        <property name="name">palette_ctrl_select_remap</property>
                                                         <property name="pane_border">1</property>
                                                         <property name="pane_position"></property>
                                                         <property name="pane_size"></property>
@@ -2252,7 +2252,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnChoice">onOverlayChoice</event>
+                                                        <event name="OnChoice">onRemapChoice</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>
@@ -2561,9 +2561,9 @@
                                                     <property name="proportion">1</property>
                                                     <object class="wxStaticBoxSizer" expanded="1">
                                                         <property name="id">wxID_ANY</property>
-                                                        <property name="label">Selected overlay</property>
+                                                        <property name="label">Selected remapping</property>
                                                         <property name="minimum_size"></property>
-                                                        <property name="name">palette_ctrl_overlay_box</property>
+                                                        <property name="name">palette_ctrl_remap_box</property>
                                                         <property name="orient">wxVERTICAL</property>
                                                         <property name="permission">none</property>
                                                         <event name="OnUpdateUI"></event>
@@ -2608,7 +2608,7 @@
                                                                 <property name="minimize_button">0</property>
                                                                 <property name="minimum_size"></property>
                                                                 <property name="moveable">1</property>
-                                                                <property name="name">palette_ctrl_deloverlay_button</property>
+                                                                <property name="name">palette_ctrl_delremap_button</property>
                                                                 <property name="pane_border">1</property>
                                                                 <property name="pane_position"></property>
                                                                 <property name="pane_size"></property>
@@ -2790,7 +2790,7 @@
                                                                 <property name="gripper">0</property>
                                                                 <property name="hidden">0</property>
                                                                 <property name="id">wxID_ANY</property>
-                                                                <property name="label">New overlay</property>
+                                                                <property name="label">New remapping</property>
                                                                 <property name="max_size"></property>
                                                                 <property name="maximize_button">0</property>
                                                                 <property name="maximum_size"></property>
@@ -2798,7 +2798,7 @@
                                                                 <property name="minimize_button">0</property>
                                                                 <property name="minimum_size"></property>
                                                                 <property name="moveable">1</property>
-                                                                <property name="name">palette_ctrl_newoverlay_button</property>
+                                                                <property name="name">palette_ctrl_newremap_button</property>
                                                                 <property name="pane_border">1</property>
                                                                 <property name="pane_position"></property>
                                                                 <property name="pane_size"></property>
@@ -2854,7 +2854,7 @@
                                         <property name="border">0</property>
                                         <property name="flag">wxEXPAND | wxALL</property>
                                         <property name="proportion">1</property>
-                                        <object class="wxPanel" expanded="0">
+                                        <object class="wxPanel" expanded="1">
                                             <property name="BottomDockable">1</property>
                                             <property name="LeftDockable">1</property>
                                             <property name="RightDockable">1</property>
