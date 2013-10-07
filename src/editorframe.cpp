@@ -238,6 +238,39 @@ void EditorFrame::onPaletteSave(wxCommandEvent& event) {
     sd_palette_to_gimp_palette((char*)sd.GetPath().mb_str().data(), m_filedata->palettes[m_pal]);
 }
 
+void EditorFrame::onAnimItemEdit(wxCommandEvent& event) {
+    event.StopPropagation();
+}
+
+void EditorFrame::onAnimTreeContextMenu(wxTreeEvent& event) {
+    event.StopPropagation();
+
+    wxPoint point = event.GetPoint();
+
+    wxMenu menu;
+    wxMenuItem *editItem = new wxMenuItem(&menu, wxID_ANY, _("Edit"));
+    this->Connect(editItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(EditorFrame::onAnimItemEdit));
+    menu.Append(editItem);
+    PopupMenu(&menu, point.x, point.y);
+}
+
+void EditorFrame::onAnimTreeItemSelect(wxTreeEvent& event) {
+    event.StopPropagation();
+
+    // Handle information
+    AnimationTreeDataItem *item = (AnimationTreeDataItem*)animations_tree->GetItemData(event.GetItem());
+    if(item->getType() == AnimationTreeDataItem::SPRITE) {
+        sd_sprite *sprite = item->getSprite();
+
+    } else {
+        sd_animation *animation = item->getAnimation();
+    
+    }
+
+    // Redraw
+    this->Update();
+}
+
 void EditorFrame::onBackgroundSave(wxCommandEvent& event) {
     // Ask the user where to save
     wxFileDialog sd(this, _("PNG (Portable Network Graphics)"), _(""), _(""), _("PNG files (*.png)|*.png"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);

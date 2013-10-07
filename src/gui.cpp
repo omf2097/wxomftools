@@ -158,7 +158,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	tab_info->SetSizer( info_base_sizer );
 	tab_info->Layout();
 	info_base_sizer->Fit( tab_info );
-	base_tabs->AddPage( tab_info, wxT("Information"), true, wxNullBitmap );
+	base_tabs->AddPage( tab_info, wxT("Information"), false, wxNullBitmap );
 	tab_background = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* bg_base_sizer;
 	bg_base_sizer = new wxFlexGridSizer( 1, 2, 0, 0 );
@@ -338,7 +338,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	tab_animations->SetSizer( animations_base_sizer );
 	tab_animations->Layout();
 	animations_base_sizer->Fit( tab_animations );
-	base_tabs->AddPage( tab_animations, wxT("Animations"), false, wxNullBitmap );
+	base_tabs->AddPage( tab_animations, wxT("Animations"), true, wxNullBitmap );
 	
 	base_sizer->Add( base_tabs, 1, wxEXPAND | wxALL, 0 );
 	
@@ -365,6 +365,8 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	palette_ctrl_delremap_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onOverlayDelete ), NULL, this );
 	palette_ctrl_newpal_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onNewPalette ), NULL, this );
 	palette_ctrl_newremap_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onNewOverlay ), NULL, this );
+	animations_tree->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BaseFrame::onAnimTreeContextMenu ), NULL, this );
+	animations_tree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BaseFrame::onAnimTreeItemSelect ), NULL, this );
 	animations_sprite_panel->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
 	animations_sprite_panel->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
 	animations_sprite_panel->Connect( wxEVT_MIDDLE_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
@@ -399,6 +401,8 @@ BaseFrame::~BaseFrame()
 	palette_ctrl_delremap_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onOverlayDelete ), NULL, this );
 	palette_ctrl_newpal_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onNewPalette ), NULL, this );
 	palette_ctrl_newremap_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onNewOverlay ), NULL, this );
+	animations_tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BaseFrame::onAnimTreeContextMenu ), NULL, this );
+	animations_tree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BaseFrame::onAnimTreeItemSelect ), NULL, this );
 	animations_sprite_panel->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
 	animations_sprite_panel->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
 	animations_sprite_panel->Disconnect( wxEVT_MIDDLE_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );

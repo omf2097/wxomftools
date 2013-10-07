@@ -96,6 +96,8 @@ class BaseFrame : public wxFrame
 		virtual void onOverlayDelete( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onNewPalette( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onNewOverlay( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onAnimTreeContextMenu( wxTreeEvent& event ) { event.Skip(); }
+		virtual void onAnimTreeItemSelect( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onSpriteMouseEvent( wxMouseEvent& event ) { event.Skip(); }
 		
 	

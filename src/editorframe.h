@@ -11,7 +11,8 @@ protected:
     
     int m_pal;
     int m_remap;
-
+    
+    // From parent
     virtual void onMenuExit(wxCommandEvent& event);
     virtual void onMenuAbout(wxCommandEvent& event);
     virtual void onMenuOpen(wxCommandEvent& event);
@@ -20,6 +21,11 @@ protected:
 	virtual void onRemapChoice(wxCommandEvent& event);
     virtual void onPaletteLoad(wxCommandEvent& event);
     virtual void onPaletteSave(wxCommandEvent& event);
+    virtual void onAnimTreeContextMenu(wxTreeEvent& event);
+    virtual void onAnimTreeItemSelect(wxTreeEvent& event);
+    
+    // Local
+    virtual void onAnimItemEdit(wxCommandEvent& event);
     
 public:
     EditorFrame(wxFrame *frame);
