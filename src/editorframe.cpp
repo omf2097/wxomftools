@@ -7,7 +7,6 @@
 EditorFrame::EditorFrame(wxFrame *frame) : BaseFrame(frame) {
     // Initialize
     m_filedata = NULL;
-    m_filename = "";
     reset();
 
     // Disable stuff by default
@@ -30,6 +29,9 @@ void EditorFrame::reset() {
         sd_bk_delete(m_filedata);
         m_filedata = NULL;
     }
+    m_filename = "";
+    m_pal = 0;
+    m_remap = 0;
     updateTitle();
     m_filedata = sd_bk_create();
 }
@@ -90,6 +92,20 @@ void EditorFrame::onMenuOpen(wxCommandEvent& event) {
     this->refreshFields();
 }
 
+void EditorFrame::convertRGBAtoRGB(char *dst, char *src, int size) {
+    for(int i = 0; i < size; i++) {
+        dst[(i*3) + 0] = src[(i*4) + 0];
+        dst[(i*3) + 1] = src[(i*4) + 1];
+        dst[(i*3) + 2] = src[(i*4) + 2];
+    }
+}
+
+wxImage EditorFrame::RGBAtoNative(sd_rgba_image *src) {
+    char *idata = (char*)malloc(320 * 200 * 3);
+    this->convertRGBAtoRGB(idata, src->data, 320*200);
+    return wxImage(320, 200, (unsigned char*)idata, false);
+}
+
 void EditorFrame::refreshFields() {
     info_value_fileid->SetValue(wxString::Format("%d", m_filedata->file_id));
 	info_value_palettec->SetLabel(wxString::Format("%d", m_filedata->num_palettes));
@@ -104,9 +120,8 @@ void EditorFrame::refreshFields() {
     
     // Load up background image
     sd_rgba_image *img = sd_vga_image_decode(m_filedata->background, m_filedata->palettes[0], 0);
-    wxImage bgImg(320, 200, (unsigned char *)img->data, false);
-    bgImg = bgImg.Scale(640, 400);
-    this->bg_image_panel->SetBitmap(wxBitmap(bgImg));
+    wxImage bgImg = RGBAtoNative(img).Scale(640, 400);
+    this->bg_image_bitmap->SetBitmap(wxBitmap(bgImg));
     sd_rgba_image_delete(img);
     
     // Load up animations
@@ -135,6 +150,19 @@ void EditorFrame::refreshFields() {
     
     // Request for refresh
     this->Refresh();
+}
+
+void EditorFrame::onBackgroundSave(wxCommandEvent& event) {
+    // Ask the user where to save
+    wxFileDialog sd(this, _("PNG (Portable Network Graphics)"), _(""), _(""), _("PNG files (*.png)|*.png"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
+    if (sd.ShowModal() != wxID_OK) {
+        return;
+    }
+
+    // Decode and save
+    sd_rgba_image *img = sd_vga_image_decode(m_filedata->background, m_filedata->palettes[0], 0);
+    RGBAtoNative(img).SaveFile(sd.GetPath());
+    sd_rgba_image_delete(img);
 }
 
 void EditorFrame::onMenuAbout(wxCommandEvent &event) {

@@ -158,7 +158,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	tab_info->SetSizer( info_base_sizer );
 	tab_info->Layout();
 	info_base_sizer->Fit( tab_info );
-	base_tabs->AddPage( tab_info, wxT("Information"), false, wxNullBitmap );
+	base_tabs->AddPage( tab_info, wxT("Information"), true, wxNullBitmap );
 	tab_background = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* bg_base_sizer;
 	bg_base_sizer = new wxFlexGridSizer( 1, 2, 0, 0 );
@@ -186,16 +186,32 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bg_ctrl_sizer->Fit( bg_ctrl_panel );
 	bg_base_sizer->Add( bg_ctrl_panel, 1, wxEXPAND | wxALL, 0 );
 	
-	bg_image_panel = new wxStaticBitmap( tab_background, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER );
+	bg_image_panel = new wxPanel( tab_background, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	bg_image_panel->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
 	
-	bg_base_sizer->Add( bg_image_panel, 0, wxALL|wxEXPAND, 0 );
+	wxFlexGridSizer* bg_image_sizer;
+	bg_image_sizer = new wxFlexGridSizer( 1, 1, 0, 0 );
+	bg_image_sizer->AddGrowableCol( 0 );
+	bg_image_sizer->AddGrowableRow( 0 );
+	bg_image_sizer->SetFlexibleDirection( wxBOTH );
+	bg_image_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	bg_image_bitmap = new wxStaticBitmap( bg_image_panel, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( 640,400 ), wxNO_BORDER );
+	bg_image_bitmap->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
+	
+	bg_image_sizer->Add( bg_image_bitmap, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 0 );
+	
+	
+	bg_image_panel->SetSizer( bg_image_sizer );
+	bg_image_panel->Layout();
+	bg_image_sizer->Fit( bg_image_panel );
+	bg_base_sizer->Add( bg_image_panel, 1, wxEXPAND | wxALL, 0 );
 	
 	
 	tab_background->SetSizer( bg_base_sizer );
 	tab_background->Layout();
 	bg_base_sizer->Fit( tab_background );
-	base_tabs->AddPage( tab_background, wxT("Background"), true, wxNullBitmap );
+	base_tabs->AddPage( tab_background, wxT("Background"), false, wxNullBitmap );
 	tab_palette = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* palette_base_sizer;
 	palette_base_sizer = new wxFlexGridSizer( 1, 2, 0, 0 );

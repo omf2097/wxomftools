@@ -59,7 +59,8 @@ class BaseFrame : public wxFrame
 		wxPanel* tab_background;
 		wxButton* bg_ctrl_load_button;
 		wxButton* bg_ctrl_save_button;
-		wxStaticBitmap* bg_image_panel;
+		wxPanel* bg_image_panel;
+		wxStaticBitmap* bg_image_bitmap;
 		wxPanel* tab_palette;
 		wxPanel* palette_ctrl_panel;
 		wxChoice* palette_ctrl_select_palette;

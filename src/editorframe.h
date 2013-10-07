@@ -8,14 +8,21 @@ class EditorFrame: public BaseFrame {
 protected:
     sd_bk_file *m_filedata;
     wxString m_filename;
+    
+    int m_pal;
+    int m_remap;
 
     virtual void onMenuExit(wxCommandEvent& event);
     virtual void onMenuAbout(wxCommandEvent& event);
     virtual void onMenuOpen(wxCommandEvent& event);
+    virtual void onBackgroundSave(wxCommandEvent& event);
     
 public:
     EditorFrame(wxFrame *frame);
     ~EditorFrame();
+    
+    void convertRGBAtoRGB(char *dst, char *src, int size);
+    wxImage RGBAtoNative(sd_rgba_image *src);
     
     void updateTitle();
     void reset();
