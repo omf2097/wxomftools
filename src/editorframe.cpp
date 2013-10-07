@@ -50,6 +50,24 @@ void EditorFrame::updateTitle() {
     SetTitle(title);
 }
 
+void EditorFrame::onMenuSave(wxCommandEvent& event) {
+    event.StopPropagation();
+    
+    sd_bk_save(m_filedata, m_filename);
+}
+
+void EditorFrame::onMenuSaveAs(wxCommandEvent& event) {
+    event.StopPropagation();
+    
+    // Ask the user where to save
+    wxFileDialog sd(this, _("Save BK file"), _(""), _(""), _("BK files (*.BK)|*.BK"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
+    if (sd.ShowModal() != wxID_OK) {
+        return;
+    }
+    
+    sd_bk_save(m_filedata, (char*)sd.GetPath().mb_str().data());
+}
+
 void EditorFrame::onMenuExit(wxCommandEvent& event) {
     Destroy();
 }

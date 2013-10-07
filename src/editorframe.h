@@ -23,6 +23,8 @@ protected:
     virtual void onPaletteSave(wxCommandEvent& event);
     virtual void onAnimTreeContextMenu(wxTreeEvent& event);
     virtual void onAnimTreeItemSelect(wxTreeEvent& event);
+    virtual void onMenuSave(wxCommandEvent& event);
+    virtual void onMenuSaveAs(wxCommandEvent& event);
     
     // Local
     virtual void onAnimItemEdit(wxCommandEvent& event);

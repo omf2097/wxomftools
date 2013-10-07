@@ -16,14 +16,14 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	base_menu_bar = new wxMenuBar( 0 );
 	menu_file = new wxMenu();
 	wxMenuItem* menuitem_new;
-	menuitem_new = new wxMenuItem( menu_file, wxID_ANY, wxString( wxT("New") ) , wxEmptyString, wxITEM_NORMAL );
+	menuitem_new = new wxMenuItem( menu_file, wxID_ANY, wxString( wxT("New") ) + wxT('\t') + wxT("CTRL+N"), wxEmptyString, wxITEM_NORMAL );
 	menu_file->Append( menuitem_new );
 	
 	wxMenuItem* menuitem_open;
-	menuitem_open = new wxMenuItem( menu_file, wxID_ANY, wxString( wxT("Open ...") ) , wxEmptyString, wxITEM_NORMAL );
+	menuitem_open = new wxMenuItem( menu_file, wxID_ANY, wxString( wxT("Open ...") ) + wxT('\t') + wxT("CTRL+O"), wxEmptyString, wxITEM_NORMAL );
 	menu_file->Append( menuitem_open );
 	
-	menuitem_save = new wxMenuItem( menu_file, wxID_ANY, wxString( wxT("Save") ) , wxEmptyString, wxITEM_NORMAL );
+	menuitem_save = new wxMenuItem( menu_file, wxID_ANY, wxString( wxT("Save") ) + wxT('\t') + wxT("CTRL+S"), wxEmptyString, wxITEM_NORMAL );
 	menu_file->Append( menuitem_save );
 	
 	menuitem_saveas = new wxMenuItem( menu_file, wxID_ANY, wxString( wxT("Save As ...") ) , wxEmptyString, wxITEM_NORMAL );
@@ -158,7 +158,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	tab_info->SetSizer( info_base_sizer );
 	tab_info->Layout();
 	info_base_sizer->Fit( tab_info );
-	base_tabs->AddPage( tab_info, wxT("Information"), false, wxNullBitmap );
+	base_tabs->AddPage( tab_info, wxT("Information"), true, wxNullBitmap );
 	tab_background = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* bg_base_sizer;
 	bg_base_sizer = new wxFlexGridSizer( 1, 2, 0, 0 );
@@ -338,7 +338,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	tab_animations->SetSizer( animations_base_sizer );
 	tab_animations->Layout();
 	animations_base_sizer->Fit( tab_animations );
-	base_tabs->AddPage( tab_animations, wxT("Animations"), true, wxNullBitmap );
+	base_tabs->AddPage( tab_animations, wxT("Animations"), false, wxNullBitmap );
 	
 	base_sizer->Add( base_tabs, 1, wxEXPAND | wxALL, 0 );
 	
