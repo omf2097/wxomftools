@@ -11,6 +11,7 @@ protected:
 
     virtual void onMenuExit(wxCommandEvent& event);
     virtual void onMenuAbout(wxCommandEvent& event);
+    virtual void onMenuOpen(wxCommandEvent& event);
     
 public:
     EditorFrame(wxFrame *frame);
@@ -18,9 +19,7 @@ public:
     
     void updateTitle();
     void reset();
-    
-    void disableAll();
-    void enableAll();
+    void refreshFields();
 };
 
 #endif // _EDITORFRAME_H

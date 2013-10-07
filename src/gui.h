@@ -25,6 +25,7 @@
 #include <wx/statbox.h>
 #include <wx/panel.h>
 #include <wx/button.h>
+#include <wx/statbmp.h>
 #include <wx/choice.h>
 #include <wx/treectrl.h>
 #include <wx/html/htmlwin.h>
@@ -45,19 +46,20 @@ class BaseFrame : public wxFrame
 	protected:
 		wxMenuBar* base_menu_bar;
 		wxMenu* menu_file;
+		wxMenuItem* menuitem_save;
+		wxMenuItem* menuitem_saveas;
 		wxMenu* menu_help;
 		wxAuiNotebook* base_tabs;
 		wxPanel* tab_info;
 		wxTextCtrl* info_value_fileid;
 		wxStaticText* info_value_palettec;
-		wxStaticText* info_value_overlayc;
 		wxStaticText* info_value_bgw;
 		wxStaticText* info_value_bgh;
 		wxStaticText* info_value_animationc;
 		wxPanel* tab_background;
 		wxButton* bg_ctrl_load_button;
 		wxButton* bg_ctrl_save_button;
-		wxPanel* bg_image_panel;
+		wxStaticBitmap* bg_image_panel;
 		wxPanel* tab_palette;
 		wxPanel* palette_ctrl_panel;
 		wxChoice* palette_ctrl_select_palette;
@@ -85,8 +87,6 @@ class BaseFrame : public wxFrame
 		virtual void onMenuAbout( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onBackgroundLoad( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onBackgroundSave( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onBackgroundMouseEvent( wxMouseEvent& event ) { event.Skip(); }
-		virtual void onBackgroundPaint( wxPaintEvent& event ) { event.Skip(); }
 		virtual void onPaletteChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onOverlayChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onPaletteLoad( wxCommandEvent& event ) { event.Skip(); }

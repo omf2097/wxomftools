@@ -1,13 +1,20 @@
 #include "editorframe.h"
-
+#include "animationtreedataitem.h"
 #include <wx/filedlg.h>
+#include <wx/msgdlg.h>
 #include <wx/aboutdlg.h>
 
 EditorFrame::EditorFrame(wxFrame *frame) : BaseFrame(frame) {
     // Initialize
     m_filedata = NULL;
+    m_filename = "";
     reset();
 
+    // Disable stuff by default
+    this->menuitem_save->Enable(false);
+    this->menuitem_saveas->Enable(false);
+    this->base_tabs->Enable(false);
+    
     // Load wx image handlers
     wxImage::AddHandler(new wxPNGHandler);
 }
@@ -19,7 +26,6 @@ EditorFrame::~EditorFrame() {
 }
 
 void EditorFrame::reset() {
-    m_filename = "";
     if(m_filedata != NULL) {
         sd_bk_delete(m_filedata);
         m_filedata = NULL;
@@ -44,6 +50,91 @@ void EditorFrame::updateTitle() {
 
 void EditorFrame::onMenuExit(wxCommandEvent& event) {
     Destroy();
+}
+
+void EditorFrame::onMenuOpen(wxCommandEvent& event) {
+    event.StopPropagation();
+
+    // Let the user select file
+    wxFileDialog fd(this, _("Open BK file"), _(""), _(""), _("BK files (*.BK)|*.BK"), wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+    if(fd.ShowModal() != wxID_OK) {
+        return;
+    }
+    
+    // Open file
+    wxString new_name = fd.GetPath();
+    sd_bk_file *new_data = sd_bk_create();
+    int success = sd_bk_load(new_data, new_name);
+    if(success != SD_SUCCESS) {
+        wxMessageDialog md(this, wxString("Error while attempting to parse BK file."), _("Error"), wxICON_ERROR|wxOK);
+        md.ShowModal();
+        sd_bk_delete(new_data);
+        return;
+    }
+    
+    // Kill old data & set new
+    if(m_filedata != NULL) {
+        sd_bk_delete(m_filedata);
+        m_filedata = NULL;
+    }
+    m_filedata = new_data;
+    m_filename = new_name;
+    updateTitle();
+
+    // Enable items
+    this->menuitem_save->Enable(true);
+    this->menuitem_saveas->Enable(true);
+    this->base_tabs->Enable(true);
+    
+    // Refresh editor fields
+    this->refreshFields();
+}
+
+void EditorFrame::refreshFields() {
+    info_value_fileid->SetValue(wxString::Format("%d", m_filedata->file_id));
+	info_value_palettec->SetLabel(wxString::Format("%d", m_filedata->num_palettes));
+	info_value_bgw->SetLabel(wxString::Format("%d", m_filedata->background->w));
+	info_value_bgh->SetLabel(wxString::Format("%d", m_filedata->background->h));
+    
+    int anim_num = 0;
+    for(int i = 0; i < 50; i++) {
+        if(m_filedata->anims[i] != NULL) anim_num++;
+    }
+	info_value_animationc->SetLabel(wxString::Format("%d", anim_num));
+    
+    // Load up background image
+    sd_rgba_image *img = sd_vga_image_decode(m_filedata->background, m_filedata->palettes[0], 0);
+    wxImage bgImg(320, 200, (unsigned char *)img->data, false);
+    bgImg = bgImg.Scale(640, 400);
+    this->bg_image_panel->SetBitmap(wxBitmap(bgImg));
+    sd_rgba_image_delete(img);
+    
+    // Load up animations
+    animations_tree->DeleteAllItems();
+    wxTreeItemId root_index = animations_tree->AddRoot(_("Animations"));
+    for(int i = 0; i < 50; i++) {
+        if(m_filedata->anims[i] == NULL) continue;
+        sd_bk_anim *bka = m_filedata->anims[i];
+        sd_animation *a = bka->animation;
+        
+        wxString anim_name(_("Animation "));
+        anim_name << i;
+        wxTreeItemData *anim_data = new AnimationTreeDataItem(a);
+        wxTreeItemId anim_index = animations_tree->AppendItem(root_index, anim_name, -1, -1, anim_data);
+
+        // Load Sprites
+        for(int n = 0; n < a->frame_count; n++) {
+            sd_sprite *s = a->sprites[n];
+        
+            wxString sprite_name(_("Sprite "));
+            sprite_name << (wxChar)(65 + n);
+            wxTreeItemData *spriteData = new AnimationTreeDataItem(s);
+            animations_tree->AppendItem(anim_index, sprite_name, -1, -1, spriteData);
+        }
+    }
+    
+    // Request for refresh
+    this->Refresh();
 }
 
 void EditorFrame::onMenuAbout(wxCommandEvent &event) {

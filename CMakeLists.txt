@@ -13,6 +13,7 @@ add_executable(wxbkeditor
     src/gui.cpp
     src/app.cpp
     src/editorframe.cpp
+    src/animationtreedataitem.cpp
 )
 
 set(COREINCS

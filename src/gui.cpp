@@ -23,11 +23,9 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	menuitem_open = new wxMenuItem( menu_file, wxID_ANY, wxString( wxT("Open ...") ) , wxEmptyString, wxITEM_NORMAL );
 	menu_file->Append( menuitem_open );
 	
-	wxMenuItem* menuitem_save;
 	menuitem_save = new wxMenuItem( menu_file, wxID_ANY, wxString( wxT("Save") ) , wxEmptyString, wxITEM_NORMAL );
 	menu_file->Append( menuitem_save );
 	
-	wxMenuItem* menuitem_saveas;
 	menuitem_saveas = new wxMenuItem( menu_file, wxID_ANY, wxString( wxT("Save As ...") ) , wxEmptyString, wxITEM_NORMAL );
 	menu_file->Append( menuitem_saveas );
 	
@@ -95,15 +93,6 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	info_value_palettec->Wrap( -1 );
 	info_palette_fg->Add( info_value_palettec, 0, wxALL, 5 );
 	
-	wxStaticText* info_key_overlayc;
-	info_key_overlayc = new wxStaticText( tab_info, wxID_ANY, wxT("Overlay count:"), wxDefaultPosition, wxDefaultSize, 0 );
-	info_key_overlayc->Wrap( -1 );
-	info_palette_fg->Add( info_key_overlayc, 0, wxALL, 5 );
-	
-	info_value_overlayc = new wxStaticText( tab_info, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, 0 );
-	info_value_overlayc->Wrap( -1 );
-	info_palette_fg->Add( info_value_overlayc, 0, wxALL, 5 );
-	
 	
 	info_palette_sizer->Add( info_palette_fg, 1, wxEXPAND, 0 );
 	
@@ -169,7 +158,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	tab_info->SetSizer( info_base_sizer );
 	tab_info->Layout();
 	info_base_sizer->Fit( tab_info );
-	base_tabs->AddPage( tab_info, wxT("Information"), true, wxNullBitmap );
+	base_tabs->AddPage( tab_info, wxT("Information"), false, wxNullBitmap );
 	tab_background = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* bg_base_sizer;
 	bg_base_sizer = new wxFlexGridSizer( 1, 2, 0, 0 );
@@ -197,16 +186,16 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bg_ctrl_sizer->Fit( bg_ctrl_panel );
 	bg_base_sizer->Add( bg_ctrl_panel, 1, wxEXPAND | wxALL, 0 );
 	
-	bg_image_panel = new wxPanel( tab_background, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
+	bg_image_panel = new wxStaticBitmap( tab_background, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER );
 	bg_image_panel->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
 	
-	bg_base_sizer->Add( bg_image_panel, 1, wxEXPAND | wxALL, 0 );
+	bg_base_sizer->Add( bg_image_panel, 0, wxALL|wxEXPAND, 0 );
 	
 	
 	tab_background->SetSizer( bg_base_sizer );
 	tab_background->Layout();
 	bg_base_sizer->Fit( tab_background );
-	base_tabs->AddPage( tab_background, wxT("Background"), false, wxNullBitmap );
+	base_tabs->AddPage( tab_background, wxT("Background"), true, wxNullBitmap );
 	tab_palette = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* palette_base_sizer;
 	palette_base_sizer = new wxFlexGridSizer( 1, 2, 0, 0 );
@@ -352,20 +341,6 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Connect( menu_about->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BaseFrame::onMenuAbout ) );
 	bg_ctrl_load_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onBackgroundLoad ), NULL, this );
 	bg_ctrl_save_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onBackgroundSave ), NULL, this );
-	bg_image_panel->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_MIDDLE_DOWN, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_MIDDLE_UP, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_MOTION, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_LEFT_DCLICK, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_MIDDLE_DCLICK, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_RIGHT_DCLICK, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_LEAVE_WINDOW, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_ENTER_WINDOW, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_MOUSEWHEEL, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Connect( wxEVT_PAINT, wxPaintEventHandler( BaseFrame::onBackgroundPaint ), NULL, this );
 	palette_ctrl_select_palette->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( BaseFrame::onPaletteChoice ), NULL, this );
 	palette_ctrl_select_overlay->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( BaseFrame::onOverlayChoice ), NULL, this );
 	palette_ctrl_load_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onPaletteLoad ), NULL, this );
@@ -400,20 +375,6 @@ BaseFrame::~BaseFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BaseFrame::onMenuAbout ) );
 	bg_ctrl_load_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onBackgroundLoad ), NULL, this );
 	bg_ctrl_save_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onBackgroundSave ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_MIDDLE_DOWN, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_MIDDLE_UP, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_RIGHT_UP, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_MOTION, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_LEFT_DCLICK, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_MIDDLE_DCLICK, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_RIGHT_DCLICK, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_LEAVE_WINDOW, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_ENTER_WINDOW, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_MOUSEWHEEL, wxMouseEventHandler( BaseFrame::onBackgroundMouseEvent ), NULL, this );
-	bg_image_panel->Disconnect( wxEVT_PAINT, wxPaintEventHandler( BaseFrame::onBackgroundPaint ), NULL, this );
 	palette_ctrl_select_palette->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( BaseFrame::onPaletteChoice ), NULL, this );
 	palette_ctrl_select_overlay->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( BaseFrame::onOverlayChoice ), NULL, this );
 	palette_ctrl_load_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onPaletteLoad ), NULL, this );
