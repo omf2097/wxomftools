@@ -10,16 +10,16 @@ public:
     static const int SPRITE = 1;
     static const int EMPTY = 2;
 
-    AnimationTreeDataItem(sd_animation *animation);
+    AnimationTreeDataItem(sd_bk_anim *animation);
     AnimationTreeDataItem(sd_sprite *sprite);
     AnimationTreeDataItem();
 
     int getType();
-    sd_animation* getAnimation();
+    sd_bk_anim* getAnimation();
     sd_sprite* getSprite();
 
 protected:
-    sd_animation *animation;
+    sd_bk_anim *animation;
     sd_sprite *sprite;
 };
 

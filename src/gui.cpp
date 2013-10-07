@@ -302,37 +302,52 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	animations_base_sizer->SetFlexibleDirection( wxBOTH );
 	animations_base_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
+	animations_ctrl_panel = new wxPanel( tab_animations, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* animations_ctrl_sizer;
+	animations_ctrl_sizer = new wxFlexGridSizer( 2, 1, 0, 0 );
+	animations_ctrl_sizer->SetFlexibleDirection( wxBOTH );
+	animations_ctrl_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxStaticBoxSizer* animations_ctrl_anim_sizer;
+	animations_ctrl_anim_sizer = new wxStaticBoxSizer( new wxStaticBox( animations_ctrl_panel, wxID_ANY, wxT("Animation") ), wxVERTICAL );
+	
+	animation_ctrl_delete_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Delete selected"), wxDefaultPosition, wxDefaultSize, 0 );
+	animations_ctrl_anim_sizer->Add( animation_ctrl_delete_button, 0, wxALL|wxEXPAND, 5 );
+	
+	animation_ctrl_edit_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Edit selected"), wxDefaultPosition, wxDefaultSize, 0 );
+	animations_ctrl_anim_sizer->Add( animation_ctrl_edit_button, 0, wxALL|wxEXPAND, 5 );
+	
+	animation_ctrl_add_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0 );
+	animations_ctrl_anim_sizer->Add( animation_ctrl_add_button, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	animations_ctrl_sizer->Add( animations_ctrl_anim_sizer, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* animations_ctrl_sprite_sizer;
+	animations_ctrl_sprite_sizer = new wxStaticBoxSizer( new wxStaticBox( animations_ctrl_panel, wxID_ANY, wxT("Sprite") ), wxVERTICAL );
+	
+	animation_ctrl_delete_sprite_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Delete selected"), wxDefaultPosition, wxDefaultSize, 0 );
+	animations_ctrl_sprite_sizer->Add( animation_ctrl_delete_sprite_button, 0, wxALL|wxEXPAND, 5 );
+	
+	animation_ctrl_edit_sprite_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Edit selected"), wxDefaultPosition, wxDefaultSize, 0 );
+	animations_ctrl_sprite_sizer->Add( animation_ctrl_edit_sprite_button, 0, wxALL|wxEXPAND, 5 );
+	
+	animation_ctrl_add_sprite_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Add to selected"), wxDefaultPosition, wxDefaultSize, 0 );
+	animations_ctrl_sprite_sizer->Add( animation_ctrl_add_sprite_button, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	animations_ctrl_sizer->Add( animations_ctrl_sprite_sizer, 1, wxEXPAND, 5 );
+	
+	
+	animations_ctrl_panel->SetSizer( animations_ctrl_sizer );
+	animations_ctrl_panel->Layout();
+	animations_ctrl_sizer->Fit( animations_ctrl_panel );
+	animations_base_sizer->Add( animations_ctrl_panel, 1, wxEXPAND | wxALL, 5 );
+	
 	animations_tree = new wxTreeCtrl( tab_animations, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
 	animations_tree->SetMinSize( wxSize( 180,-1 ) );
 	
 	animations_base_sizer->Add( animations_tree, 0, wxALL|wxEXPAND, 5 );
-	
-	animations_splitter = new wxSplitterWindow( tab_animations, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_3D );
-	animations_splitter->SetSashGravity( 0 );
-	animations_splitter->Connect( wxEVT_IDLE, wxIdleEventHandler( BaseFrame::animations_splitterOnIdle ), NULL, this );
-	animations_splitter->SetMinimumPaneSize( 150 );
-	
-	animations_sprite_panel = new wxPanel( animations_splitter, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	animations_sprite_panel->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
-	
-	wxPanel* animations_info_panel;
-	animations_info_panel = new wxPanel( animations_splitter, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* animations_html_sizer;
-	animations_html_sizer = new wxFlexGridSizer( 1, 1, 0, 0 );
-	animations_html_sizer->AddGrowableCol( 0 );
-	animations_html_sizer->AddGrowableRow( 0 );
-	animations_html_sizer->SetFlexibleDirection( wxBOTH );
-	animations_html_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	animations_info = new wxHtmlWindow( animations_info_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHW_SCROLLBAR_AUTO|wxHW_SCROLLBAR_NEVER );
-	animations_html_sizer->Add( animations_info, 0, wxALL|wxEXPAND, 0 );
-	
-	
-	animations_info_panel->SetSizer( animations_html_sizer );
-	animations_info_panel->Layout();
-	animations_html_sizer->Fit( animations_info_panel );
-	animations_splitter->SplitHorizontally( animations_sprite_panel, animations_info_panel, 361 );
-	animations_base_sizer->Add( animations_splitter, 1, wxALL|wxEXPAND, 0 );
 	
 	
 	tab_animations->SetSizer( animations_base_sizer );
@@ -365,21 +380,14 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	palette_ctrl_delremap_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onOverlayDelete ), NULL, this );
 	palette_ctrl_newpal_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onNewPalette ), NULL, this );
 	palette_ctrl_newremap_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onNewOverlay ), NULL, this );
+	animation_ctrl_delete_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationDelete ), NULL, this );
+	animation_ctrl_edit_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationEdit ), NULL, this );
+	animation_ctrl_add_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationAdd ), NULL, this );
+	animation_ctrl_delete_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteDelete ), NULL, this );
+	animation_ctrl_edit_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteEdit ), NULL, this );
+	animation_ctrl_add_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteAdd ), NULL, this );
 	animations_tree->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BaseFrame::onAnimTreeContextMenu ), NULL, this );
 	animations_tree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BaseFrame::onAnimTreeItemSelect ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_LEFT_UP, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_MIDDLE_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_MIDDLE_UP, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_RIGHT_UP, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_MOTION, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_LEFT_DCLICK, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_MIDDLE_DCLICK, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_RIGHT_DCLICK, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_LEAVE_WINDOW, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_ENTER_WINDOW, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Connect( wxEVT_MOUSEWHEEL, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
 }
 
 BaseFrame::~BaseFrame()
@@ -401,20 +409,13 @@ BaseFrame::~BaseFrame()
 	palette_ctrl_delremap_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onOverlayDelete ), NULL, this );
 	palette_ctrl_newpal_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onNewPalette ), NULL, this );
 	palette_ctrl_newremap_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onNewOverlay ), NULL, this );
+	animation_ctrl_delete_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationDelete ), NULL, this );
+	animation_ctrl_edit_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationEdit ), NULL, this );
+	animation_ctrl_add_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationAdd ), NULL, this );
+	animation_ctrl_delete_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteDelete ), NULL, this );
+	animation_ctrl_edit_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteEdit ), NULL, this );
+	animation_ctrl_add_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteAdd ), NULL, this );
 	animations_tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BaseFrame::onAnimTreeContextMenu ), NULL, this );
 	animations_tree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BaseFrame::onAnimTreeItemSelect ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_LEFT_UP, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_MIDDLE_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_MIDDLE_UP, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_RIGHT_UP, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_MOTION, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_LEFT_DCLICK, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_MIDDLE_DCLICK, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_RIGHT_DCLICK, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_LEAVE_WINDOW, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_ENTER_WINDOW, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
-	animations_sprite_panel->Disconnect( wxEVT_MOUSEWHEEL, wxMouseEventHandler( BaseFrame::onSpriteMouseEvent ), NULL, this );
 	
 }

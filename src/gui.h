@@ -28,8 +28,6 @@
 #include <wx/statbmp.h>
 #include <wx/choice.h>
 #include <wx/treectrl.h>
-#include <wx/html/htmlwin.h>
-#include <wx/splitter.h>
 #include <wx/aui/auibook.h>
 #include <wx/frame.h>
 
@@ -74,10 +72,14 @@ class BaseFrame : public wxFrame
 		wxPanel* palette_grid_panel;
 		wxGridSizer* palette_grid_sizer;
 		wxPanel* tab_animations;
+		wxPanel* animations_ctrl_panel;
+		wxButton* animation_ctrl_delete_button;
+		wxButton* animation_ctrl_edit_button;
+		wxButton* animation_ctrl_add_button;
+		wxButton* animation_ctrl_delete_sprite_button;
+		wxButton* animation_ctrl_edit_sprite_button;
+		wxButton* animation_ctrl_add_sprite_button;
 		wxTreeCtrl* animations_tree;
-		wxSplitterWindow* animations_splitter;
-		wxPanel* animations_sprite_panel;
-		wxHtmlWindow* animations_info;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onMenuNew( wxCommandEvent& event ) { event.Skip(); }
@@ -96,9 +98,14 @@ class BaseFrame : public wxFrame
 		virtual void onOverlayDelete( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onNewPalette( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onNewOverlay( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onAnimationDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onAnimationEdit( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onAnimationAdd( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onSpriteDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onSpriteEdit( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onSpriteAdd( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onAnimTreeContextMenu( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onAnimTreeItemSelect( wxTreeEvent& event ) { event.Skip(); }
-		virtual void onSpriteMouseEvent( wxMouseEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -106,12 +113,6 @@ class BaseFrame : public wxFrame
 		BaseFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxBKEditor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~BaseFrame();
-		
-		void animations_splitterOnIdle( wxIdleEvent& )
-		{
-			animations_splitter->SetSashPosition( 361 );
-			animations_splitter->Disconnect( wxEVT_IDLE, wxIdleEventHandler( BaseFrame::animations_splitterOnIdle ), NULL, this );
-		}
 	
 };
 

@@ -1,6 +1,6 @@
 #include "animationtreedataitem.h"
 
-AnimationTreeDataItem::AnimationTreeDataItem(sd_animation *animation) : wxTreeItemData() {
+AnimationTreeDataItem::AnimationTreeDataItem(sd_bk_anim *animation) : wxTreeItemData() {
     this->sprite = NULL;
     this->animation = animation;
 }
@@ -25,7 +25,7 @@ int AnimationTreeDataItem::getType() {
     }
 }
 
-sd_animation* AnimationTreeDataItem::getAnimation() {
+sd_bk_anim* AnimationTreeDataItem::getAnimation() {
     return this->animation;
 }
 

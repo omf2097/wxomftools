@@ -153,7 +153,7 @@ void EditorFrame::refreshFields() {
         
         wxString anim_name(_("Animation "));
         anim_name << i;
-        wxTreeItemData *anim_data = new AnimationTreeDataItem(a);
+        wxTreeItemData *anim_data = new AnimationTreeDataItem(bka);
         wxTreeItemId anim_index = animations_tree->AppendItem(root_index, anim_name, -1, -1, anim_data);
 
         // Load Sprites
@@ -282,8 +282,8 @@ void EditorFrame::onAnimTreeItemSelect(wxTreeEvent& event) {
         sd_sprite *sprite = item->getSprite();
 
     } else {
-        sd_animation *animation = item->getAnimation();
-    
+        sd_bk_anim *animation = item->getAnimation();
+
     }
 
     // Redraw
