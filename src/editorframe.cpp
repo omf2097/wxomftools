@@ -259,6 +259,9 @@ void EditorFrame::onPaletteSave(wxCommandEvent& event) {
 
 void EditorFrame::onAnimItemEdit(wxCommandEvent& event) {
     event.StopPropagation();
+    
+    AnimationDialog dlg(this);
+    dlg.ShowModal();
 }
 
 void EditorFrame::onAnimTreeContextMenu(wxTreeEvent& event) {

@@ -2,6 +2,7 @@
 #define _EDITORFRAME_H
 
 #include "gui.h"
+#include "animationdialog.h"
 #include <shadowdive/shadowdive.h>
 
 class EditorFrame: public BaseFrame {

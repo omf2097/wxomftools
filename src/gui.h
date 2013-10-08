@@ -30,6 +30,8 @@
 #include <wx/treectrl.h>
 #include <wx/aui/auibook.h>
 #include <wx/frame.h>
+#include <wx/gbsizer.h>
+#include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -113,6 +115,49 @@ class BaseFrame : public wxFrame
 		BaseFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxBKEditor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~BaseFrame();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class AnimationBaseDialog
+///////////////////////////////////////////////////////////////////////////////
+class AnimationBaseDialog : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxAuiNotebook* ani_base_notebook;
+		wxPanel* tab_sprites;
+		wxPanel* tab_sprite_ctrl_panel;
+		wxButton* ani_add_sprite_button;
+		wxButton* ani_del_sprite_button;
+		wxButton* ani_edit_sprite_button;
+		wxTreeCtrl* sprite_tree_panel;
+		wxPanel* tab_settings;
+		wxStaticText* static_chain_if_hit;
+		wxTextCtrl* chain_if_hit_field;
+		wxStaticText* static_chain_if_not_hit;
+		wxTextCtrl* chain_if_not_hit_field;
+		wxStaticText* static_load_on_start;
+		wxTextCtrl* load_on_start_field;
+		wxStaticText* static_probability;
+		wxTextCtrl* probability_field;
+		wxStaticText* static_hazard_damage;
+		wxTextCtrl* hazard_damage_field;
+		wxStaticText* static_start_x;
+		wxTextCtrl* start_x_field;
+		wxStaticText* static_start_y;
+		wxTextCtrl* start_y_field;
+		wxStaticText* static_anim_string;
+		wxTextCtrl* anim_string_field;
+		wxStdDialogButtonSizer* ani_base_buttons;
+		wxButton* ani_base_buttonsOK;
+		wxButton* ani_base_buttonsCancel;
+	
+	public:
+		
+		AnimationBaseDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Animation"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 829,546 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		~AnimationBaseDialog();
 	
 };
 
