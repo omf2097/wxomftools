@@ -323,21 +323,6 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	animations_ctrl_sizer->Add( animations_ctrl_anim_sizer, 1, wxEXPAND, 5 );
 	
-	wxStaticBoxSizer* animations_ctrl_sprite_sizer;
-	animations_ctrl_sprite_sizer = new wxStaticBoxSizer( new wxStaticBox( animations_ctrl_panel, wxID_ANY, wxT("Sprite") ), wxVERTICAL );
-	
-	animation_ctrl_delete_sprite_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Delete selected"), wxDefaultPosition, wxDefaultSize, 0 );
-	animations_ctrl_sprite_sizer->Add( animation_ctrl_delete_sprite_button, 0, wxALL|wxEXPAND, 5 );
-	
-	animation_ctrl_edit_sprite_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Edit selected"), wxDefaultPosition, wxDefaultSize, 0 );
-	animations_ctrl_sprite_sizer->Add( animation_ctrl_edit_sprite_button, 0, wxALL|wxEXPAND, 5 );
-	
-	animation_ctrl_add_sprite_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Add to selected"), wxDefaultPosition, wxDefaultSize, 0 );
-	animations_ctrl_sprite_sizer->Add( animation_ctrl_add_sprite_button, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	animations_ctrl_sizer->Add( animations_ctrl_sprite_sizer, 1, wxEXPAND, 5 );
-	
 	
 	animations_ctrl_panel->SetSizer( animations_ctrl_sizer );
 	animations_ctrl_panel->Layout();
@@ -383,9 +368,6 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	animation_ctrl_delete_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationDelete ), NULL, this );
 	animation_ctrl_edit_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationEdit ), NULL, this );
 	animation_ctrl_add_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationAdd ), NULL, this );
-	animation_ctrl_delete_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteDelete ), NULL, this );
-	animation_ctrl_edit_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteEdit ), NULL, this );
-	animation_ctrl_add_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteAdd ), NULL, this );
 	animations_tree->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BaseFrame::onAnimTreeContextMenu ), NULL, this );
 	animations_tree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BaseFrame::onAnimTreeItemSelect ), NULL, this );
 }
@@ -412,9 +394,6 @@ BaseFrame::~BaseFrame()
 	animation_ctrl_delete_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationDelete ), NULL, this );
 	animation_ctrl_edit_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationEdit ), NULL, this );
 	animation_ctrl_add_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationAdd ), NULL, this );
-	animation_ctrl_delete_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteDelete ), NULL, this );
-	animation_ctrl_edit_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteEdit ), NULL, this );
-	animation_ctrl_add_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteAdd ), NULL, this );
 	animations_tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BaseFrame::onAnimTreeContextMenu ), NULL, this );
 	animations_tree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BaseFrame::onAnimTreeItemSelect ), NULL, this );
 	
@@ -581,8 +560,18 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	this->Layout();
 	
 	this->Centre( wxBOTH );
+	
+	// Connect Events
+	ani_add_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AnimationBaseDialog::onSpriteAdd ), NULL, this );
+	ani_del_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AnimationBaseDialog::onSpriteDelete ), NULL, this );
+	ani_edit_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AnimationBaseDialog::onSpriteEdit ), NULL, this );
 }
 
 AnimationBaseDialog::~AnimationBaseDialog()
 {
+	// Disconnect Events
+	ani_add_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AnimationBaseDialog::onSpriteAdd ), NULL, this );
+	ani_del_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AnimationBaseDialog::onSpriteDelete ), NULL, this );
+	ani_edit_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AnimationBaseDialog::onSpriteEdit ), NULL, this );
+	
 }

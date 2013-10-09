@@ -78,9 +78,6 @@ class BaseFrame : public wxFrame
 		wxButton* animation_ctrl_delete_button;
 		wxButton* animation_ctrl_edit_button;
 		wxButton* animation_ctrl_add_button;
-		wxButton* animation_ctrl_delete_sprite_button;
-		wxButton* animation_ctrl_edit_sprite_button;
-		wxButton* animation_ctrl_add_sprite_button;
 		wxTreeCtrl* animations_tree;
 		
 		// Virtual event handlers, overide them in your derived class
@@ -103,9 +100,6 @@ class BaseFrame : public wxFrame
 		virtual void onAnimationDelete( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onAnimationEdit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onAnimationAdd( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onSpriteDelete( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onSpriteEdit( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onSpriteAdd( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onAnimTreeContextMenu( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onAnimTreeItemSelect( wxTreeEvent& event ) { event.Skip(); }
 		
@@ -153,6 +147,12 @@ class AnimationBaseDialog : public wxDialog
 		wxStdDialogButtonSizer* ani_base_buttons;
 		wxButton* ani_base_buttonsOK;
 		wxButton* ani_base_buttonsCancel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void onSpriteAdd( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onSpriteDelete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onSpriteEdit( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
