@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 project(wxBKEditor CXX)
 
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-scripts)
-find_package(wxwidgets29)
+find_package(wxwidgets3)
 find_package(shadowdive)
 
 set(CMAKE_C_FLAGS "-Wall -std=c++11 -ggdb -Werror")
