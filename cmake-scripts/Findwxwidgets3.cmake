@@ -30,21 +30,22 @@ IF(MINGW)
     SET(WXWIDGETS_INCLUDE_DIR ${WXWIDGETS_INCLUDE_DIR} ${WXWIDGETS_SETUP_PATH})
 ELSE(MINGW)
     FIND_PROGRAM(WX_CONFIG
-        NAMES wx-config3.0 wx-config2.9
+        NAMES wx-config-3.0 wx-config-2.9
         PATHS
             /usr/bin
             /usr/local/bin
     )
 
     EXECUTE_PROCESS(
-        COMMAND WX_CONFIG "--cflags"
+        COMMAND ${WX_CONFIG} "--cflags"
         OUTPUT_VARIABLE WXWIDGETS_INCLUDE_DIR
     )
 
     EXECUTE_PROCESS(
-        COMMAND WX_CONFIG "--libs"
+        COMMAND ${WX_CONFIG} "--libs"
         OUTPUT_VARIABLE WXWIDGETS_LIBRARY
     )
+	MESSAGE("wx lib ${WXWIDGETS_LIBRARY}")
 ENDIF(MINGW)
 
 
