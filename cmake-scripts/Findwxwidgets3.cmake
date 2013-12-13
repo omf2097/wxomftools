@@ -30,7 +30,7 @@ IF(MINGW)
     SET(WXWIDGETS_INCLUDE_DIR ${WXWIDGETS_INCLUDE_DIR} ${WXWIDGETS_SETUP_PATH})
 ELSE(MINGW)
     FIND_PROGRAM(WX_CONFIG
-        wx-config3.0 | wx-config2.9
+        NAMES wx-config3.0 wx-config2.9
         PATHS
             /usr/bin
             /usr/local/bin
