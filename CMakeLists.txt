@@ -14,6 +14,7 @@ add_executable(wxbkeditor
     src/app.cpp
     src/editorframe.cpp
     src/animationdialog.cpp
+    src/spritedialog.cpp
     src/animationtreedataitem.cpp
 )
 

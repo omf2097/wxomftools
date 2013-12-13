@@ -6,9 +6,13 @@
 
 class AnimationDialog : public AnimationBaseDialog {
 protected:
+    sd_bk_anim *m_animation;
+
 public:
-    AnimationDialog(wxFrame *parent);
+    AnimationDialog(wxFrame *parent, sd_bk_anim *animation);
     ~AnimationDialog();
+
+    void save();
 };
 
 #endif // _ANIMATIONDIALOG_H

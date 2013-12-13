@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Oct  8 2012)
+// C++ code generated with wxFormBuilder (version Nov  6 2013)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -158,7 +158,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	tab_info->SetSizer( info_base_sizer );
 	tab_info->Layout();
 	info_base_sizer->Fit( tab_info );
-	base_tabs->AddPage( tab_info, wxT("Information"), true, wxNullBitmap );
+	base_tabs->AddPage( tab_info, wxT("Information"), false, wxNullBitmap );
 	tab_background = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* bg_base_sizer;
 	bg_base_sizer = new wxFlexGridSizer( 1, 2, 0, 0 );
@@ -309,7 +309,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	animations_ctrl_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	wxStaticBoxSizer* animations_ctrl_anim_sizer;
-	animations_ctrl_anim_sizer = new wxStaticBoxSizer( new wxStaticBox( animations_ctrl_panel, wxID_ANY, wxT("Animation") ), wxVERTICAL );
+	animations_ctrl_anim_sizer = new wxStaticBoxSizer( new wxStaticBox( animations_ctrl_panel, wxID_ANY, wxT("Animation/Sprite") ), wxVERTICAL );
 	
 	animation_ctrl_delete_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Delete selected"), wxDefaultPosition, wxDefaultSize, 0 );
 	animations_ctrl_anim_sizer->Add( animation_ctrl_delete_button, 0, wxALL|wxEXPAND, 5 );
@@ -317,8 +317,11 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	animation_ctrl_edit_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Edit selected"), wxDefaultPosition, wxDefaultSize, 0 );
 	animations_ctrl_anim_sizer->Add( animation_ctrl_edit_button, 0, wxALL|wxEXPAND, 5 );
 	
-	animation_ctrl_add_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0 );
+	animation_ctrl_add_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Add Animation"), wxDefaultPosition, wxDefaultSize, 0 );
 	animations_ctrl_anim_sizer->Add( animation_ctrl_add_button, 0, wxALL|wxEXPAND, 5 );
+	
+	animation_ctrl_add_sprite_button = new wxButton( animations_ctrl_panel, wxID_ANY, wxT("Add Sprite"), wxDefaultPosition, wxDefaultSize, 0 );
+	animations_ctrl_anim_sizer->Add( animation_ctrl_add_sprite_button, 0, wxALL|wxEXPAND, 5 );
 	
 	
 	animations_ctrl_sizer->Add( animations_ctrl_anim_sizer, 1, wxEXPAND, 5 );
@@ -329,16 +332,42 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	animations_ctrl_sizer->Fit( animations_ctrl_panel );
 	animations_base_sizer->Add( animations_ctrl_panel, 1, wxEXPAND | wxALL, 5 );
 	
-	animations_tree = new wxTreeCtrl( tab_animations, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
-	animations_tree->SetMinSize( wxSize( 180,-1 ) );
+	wxFlexGridSizer* animations_selection_sizer;
+	animations_selection_sizer = new wxFlexGridSizer( 2, 1, 0, 0 );
+	animations_selection_sizer->AddGrowableCol( 0 );
+	animations_selection_sizer->AddGrowableRow( 0 );
+	animations_selection_sizer->SetFlexibleDirection( wxBOTH );
+	animations_selection_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	animations_base_sizer->Add( animations_tree, 0, wxALL|wxEXPAND, 5 );
+	animations_tree = new wxTreeCtrl( tab_animations, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
+	animations_selection_sizer->Add( animations_tree, 0, wxALL|wxEXPAND, 5 );
+	
+	wxFlexGridSizer* animation_preview_sizer;
+	animation_preview_sizer = new wxFlexGridSizer( 0, 2, 0, 0 );
+	animation_preview_sizer->AddGrowableCol( 1 );
+	animation_preview_sizer->AddGrowableRow( 0 );
+	animation_preview_sizer->SetFlexibleDirection( wxBOTH );
+	animation_preview_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	animations_preview_bitmap = new wxStaticBitmap( tab_animations, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( 160,100 ), wxSTATIC_BORDER );
+	animations_preview_bitmap->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
+	
+	animation_preview_sizer->Add( animations_preview_bitmap, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
+	
+	animations_preview_data = new wxHtmlWindow( tab_animations, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHW_SCROLLBAR_AUTO|wxSUNKEN_BORDER );
+	animation_preview_sizer->Add( animations_preview_data, 0, wxBOTTOM|wxEXPAND|wxRIGHT, 5 );
+	
+	
+	animations_selection_sizer->Add( animation_preview_sizer, 1, wxEXPAND, 5 );
+	
+	
+	animations_base_sizer->Add( animations_selection_sizer, 1, wxEXPAND, 5 );
 	
 	
 	tab_animations->SetSizer( animations_base_sizer );
 	tab_animations->Layout();
 	animations_base_sizer->Fit( tab_animations );
-	base_tabs->AddPage( tab_animations, wxT("Animations"), false, wxNullBitmap );
+	base_tabs->AddPage( tab_animations, wxT("Animations"), true, wxNullBitmap );
 	
 	base_sizer->Add( base_tabs, 1, wxEXPAND | wxALL, 0 );
 	
@@ -368,6 +397,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	animation_ctrl_delete_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationDelete ), NULL, this );
 	animation_ctrl_edit_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationEdit ), NULL, this );
 	animation_ctrl_add_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationAdd ), NULL, this );
+	animation_ctrl_add_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteAdd ), NULL, this );
 	animations_tree->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BaseFrame::onAnimTreeContextMenu ), NULL, this );
 	animations_tree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BaseFrame::onAnimTreeItemSelect ), NULL, this );
 }
@@ -394,6 +424,7 @@ BaseFrame::~BaseFrame()
 	animation_ctrl_delete_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationDelete ), NULL, this );
 	animation_ctrl_edit_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationEdit ), NULL, this );
 	animation_ctrl_add_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onAnimationAdd ), NULL, this );
+	animation_ctrl_add_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BaseFrame::onSpriteAdd ), NULL, this );
 	animations_tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BaseFrame::onAnimTreeContextMenu ), NULL, this );
 	animations_tree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BaseFrame::onAnimTreeItemSelect ), NULL, this );
 	
@@ -411,41 +442,6 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	animation_base_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	ani_base_notebook = new wxAuiNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	tab_sprites = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* tab_sprites_sizer;
-	tab_sprites_sizer = new wxFlexGridSizer( 0, 2, 0, 0 );
-	tab_sprites_sizer->AddGrowableCol( 1 );
-	tab_sprites_sizer->AddGrowableRow( 0 );
-	tab_sprites_sizer->SetFlexibleDirection( wxBOTH );
-	tab_sprites_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	tab_sprite_ctrl_panel = new wxPanel( tab_sprites, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxStaticBoxSizer* sbSizer11;
-	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( tab_sprite_ctrl_panel, wxID_ANY, wxT("label") ), wxVERTICAL );
-	
-	ani_add_sprite_button = new wxButton( tab_sprite_ctrl_panel, wxID_ANY, wxT("Add"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizer11->Add( ani_add_sprite_button, 0, wxALL|wxEXPAND, 5 );
-	
-	ani_del_sprite_button = new wxButton( tab_sprite_ctrl_panel, wxID_ANY, wxT("Delete selected"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizer11->Add( ani_del_sprite_button, 0, wxALL|wxEXPAND, 5 );
-	
-	ani_edit_sprite_button = new wxButton( tab_sprite_ctrl_panel, wxID_ANY, wxT("Edit selected"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizer11->Add( ani_edit_sprite_button, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	tab_sprite_ctrl_panel->SetSizer( sbSizer11 );
-	tab_sprite_ctrl_panel->Layout();
-	sbSizer11->Fit( tab_sprite_ctrl_panel );
-	tab_sprites_sizer->Add( tab_sprite_ctrl_panel, 1, wxALL, 5 );
-	
-	sprite_tree_panel = new wxTreeCtrl( tab_sprites, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
-	tab_sprites_sizer->Add( sprite_tree_panel, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	tab_sprites->SetSizer( tab_sprites_sizer );
-	tab_sprites->Layout();
-	tab_sprites_sizer->Fit( tab_sprites );
-	ani_base_notebook->AddPage( tab_sprites, wxT("Sprites"), true, wxNullBitmap );
 	tab_settings = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxGridBagSizer* tab_settings_sizer;
 	tab_settings_sizer = new wxGridBagSizer( 5, 5 );
@@ -520,6 +516,7 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	
 	wxFlexGridSizer* tab_settings_misc_in_sizer;
 	tab_settings_misc_in_sizer = new wxFlexGridSizer( 0, 2, 0, 0 );
+	tab_settings_misc_in_sizer->AddGrowableCol( 1 );
 	tab_settings_misc_in_sizer->SetFlexibleDirection( wxBOTH );
 	tab_settings_misc_in_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -528,6 +525,8 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	tab_settings_misc_in_sizer->Add( static_anim_string, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	anim_string_field = new wxTextCtrl( tab_settings, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
+	anim_string_field->SetMinSize( wxSize( -1,100 ) );
+	
 	tab_settings_misc_in_sizer->Add( anim_string_field, 0, wxALL|wxEXPAND, 5 );
 	
 	
@@ -542,7 +541,7 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	tab_settings->SetSizer( tab_settings_sizer );
 	tab_settings->Layout();
 	tab_settings_sizer->Fit( tab_settings );
-	ani_base_notebook->AddPage( tab_settings, wxT("Settings"), false, wxNullBitmap );
+	ani_base_notebook->AddPage( tab_settings, wxT("Settings"), true, wxNullBitmap );
 	
 	animation_base_sizer->Add( ani_base_notebook, 1, wxEXPAND | wxALL, 0 );
 	
@@ -560,18 +559,47 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	this->Layout();
 	
 	this->Centre( wxBOTH );
-	
-	// Connect Events
-	ani_add_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AnimationBaseDialog::onSpriteAdd ), NULL, this );
-	ani_del_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AnimationBaseDialog::onSpriteDelete ), NULL, this );
-	ani_edit_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AnimationBaseDialog::onSpriteEdit ), NULL, this );
 }
 
 AnimationBaseDialog::~AnimationBaseDialog()
 {
-	// Disconnect Events
-	ani_add_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AnimationBaseDialog::onSpriteAdd ), NULL, this );
-	ani_del_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AnimationBaseDialog::onSpriteDelete ), NULL, this );
-	ani_edit_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( AnimationBaseDialog::onSpriteEdit ), NULL, this );
+}
+
+SpriteBaseDialog::SpriteBaseDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
+	wxFlexGridSizer* sprite_base_sizer;
+	sprite_base_sizer = new wxFlexGridSizer( 2, 1, 0, 0 );
+	sprite_base_sizer->AddGrowableCol( 0 );
+	sprite_base_sizer->AddGrowableRow( 0 );
+	sprite_base_sizer->SetFlexibleDirection( wxBOTH );
+	sprite_base_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	sprite_base_notebook = new wxAuiNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	tab_settings = new wxPanel( sprite_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	sprite_base_notebook->AddPage( tab_settings, wxT("Settings"), true, wxNullBitmap );
+	tab_sprite = new wxPanel( sprite_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	sprite_base_notebook->AddPage( tab_sprite, wxT("Sprite"), false, wxNullBitmap );
+	
+	sprite_base_sizer->Add( sprite_base_notebook, 1, wxEXPAND | wxALL, 0 );
+	
+	sprite_base_buttons = new wxStdDialogButtonSizer();
+	sprite_base_buttonsOK = new wxButton( this, wxID_OK );
+	sprite_base_buttons->AddButton( sprite_base_buttonsOK );
+	sprite_base_buttonsCancel = new wxButton( this, wxID_CANCEL );
+	sprite_base_buttons->AddButton( sprite_base_buttonsCancel );
+	sprite_base_buttons->Realize();
+	
+	sprite_base_sizer->Add( sprite_base_buttons, 1, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( sprite_base_sizer );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+}
+
+SpriteBaseDialog::~SpriteBaseDialog()
+{
 }

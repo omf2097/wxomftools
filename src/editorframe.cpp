@@ -4,6 +4,8 @@
 #include <wx/msgdlg.h>
 #include <wx/aboutdlg.h>
 
+#include <cstdio>
+
 EditorFrame::EditorFrame(wxFrame *frame) : BaseFrame(frame) {
     // Initialize
     m_filedata = NULL;
@@ -60,7 +62,12 @@ void EditorFrame::onMenuSaveAs(wxCommandEvent& event) {
     event.StopPropagation();
     
     // Ask the user where to save
-    wxFileDialog sd(this, _("Save BK file"), _(""), _(""), _("BK files (*.BK)|*.BK"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
+    wxFileDialog sd(this, 
+        _("Save BK file"),
+        _(""), 
+        _(""), 
+        _("BK files (*.BK)|*.BK"), 
+        wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
     if (sd.ShowModal() != wxID_OK) {
         return;
     }
@@ -76,7 +83,12 @@ void EditorFrame::onMenuOpen(wxCommandEvent& event) {
     event.StopPropagation();
 
     // Let the user select file
-    wxFileDialog fd(this, _("Open BK file"), _(""), _(""), _("BK files (*.BK)|*.BK"), wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+    wxFileDialog fd(this, 
+        _("Open BK file"), 
+        _(""), 
+        _(""), 
+        _("BK files (*.BK)|*.BK"), 
+        wxFD_OPEN|wxFD_FILE_MUST_EXIST);
     if(fd.ShowModal() != wxID_OK) {
         return;
     }
@@ -86,7 +98,9 @@ void EditorFrame::onMenuOpen(wxCommandEvent& event) {
     sd_bk_file *new_data = sd_bk_create();
     int success = sd_bk_load(new_data, new_name);
     if(success != SD_SUCCESS) {
-        wxMessageDialog md(this, wxString("Error while attempting to parse BK file."), _("Error"), wxICON_ERROR|wxOK);
+        wxMessageDialog md(this, 
+            wxString("Error while attempting to parse BK file."), 
+            _("Error"), wxICON_ERROR|wxOK);
         md.ShowModal();
         sd_bk_delete(new_data);
         return;
@@ -108,6 +122,7 @@ void EditorFrame::onMenuOpen(wxCommandEvent& event) {
     
     // Refresh editor fields
     this->refreshFields();
+    this->clearPreview();
 }
 
 void EditorFrame::convertRGBAtoRGB(char *dst, char *src, int size) {
@@ -119,9 +134,17 @@ void EditorFrame::convertRGBAtoRGB(char *dst, char *src, int size) {
 }
 
 wxImage EditorFrame::RGBAtoNative(sd_rgba_image *src) {
-    char *idata = (char*)malloc(320 * 200 * 3);
-    this->convertRGBAtoRGB(idata, src->data, 320*200);
-    return wxImage(320, 200, (unsigned char*)idata, false);
+    char *idata = (char*)malloc(src->w * src->h * 3);
+    this->convertRGBAtoRGB(idata, src->data, src->w*src->h);
+    return wxImage(src->w, src->h, (unsigned char*)idata, false);
+}
+
+void EditorFrame::updateBgImage() {
+    // Load up background image
+    sd_rgba_image *img = sd_vga_image_decode(m_filedata->background, m_filedata->palettes[m_pal], m_remap-1);
+    wxImage bgImg = RGBAtoNative(img).Scale(640, 400);
+    this->bg_image_bitmap->SetBitmap(wxBitmap(bgImg));
+    sd_rgba_image_delete(img);
 }
 
 void EditorFrame::refreshFields() {
@@ -136,11 +159,8 @@ void EditorFrame::refreshFields() {
     }
 	info_value_animationc->SetLabel(wxString::Format("%d", anim_num));
     
-    // Load up background image
-    sd_rgba_image *img = sd_vga_image_decode(m_filedata->background, m_filedata->palettes[0], 0);
-    wxImage bgImg = RGBAtoNative(img).Scale(640, 400);
-    this->bg_image_bitmap->SetBitmap(wxBitmap(bgImg));
-    sd_rgba_image_delete(img);
+    // Background image
+    updateBgImage();
     
     // Load up animations
     animations_tree->DeleteAllItems();
@@ -197,12 +217,18 @@ void EditorFrame::onPaletteChoice(wxCommandEvent& event) {
     event.StopPropagation();
     m_pal = palette_ctrl_select_palette->GetSelection();
     showSelectedPalette();
+    updateAnimationViews();
+    updateBgImage();
+    this->Update();
 }
 
 void EditorFrame::onRemapChoice(wxCommandEvent& event) {
     event.StopPropagation();
     m_remap = palette_ctrl_select_remap->GetSelection();
     showSelectedPalette();
+    updateAnimationViews();
+    updateBgImage();
+    this->Update();
 }
 
 void EditorFrame::showSelectedPalette() {
@@ -248,8 +274,14 @@ void EditorFrame::onPaletteLoad(wxCommandEvent& event) {
 
 void EditorFrame::onPaletteSave(wxCommandEvent& event) {
     // Ask the user where to save
-    wxFileDialog sd(this, _("GPL (Gimp Palette)"), _(""), _(""), _("GPL files (*.gpl)|*.gpl"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
-    if (sd.ShowModal() != wxID_OK) {
+    wxFileDialog sd(this, 
+        _("GPL (Gimp Palette)"), 
+        _(""), 
+        _(""), 
+        _("GPL files (*.gpl)|*.gpl"), 
+        wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
+
+    if(sd.ShowModal() != wxID_OK) {
         return;
     }
 
@@ -257,45 +289,205 @@ void EditorFrame::onPaletteSave(wxCommandEvent& event) {
     sd_palette_to_gimp_palette((char*)sd.GetPath().mb_str().data(), m_filedata->palettes[m_pal]);
 }
 
+// Gets called when animation menu "edit" button is clicked.
+void EditorFrame::onAnimationEdit(wxCommandEvent& event) {
+    event.StopPropagation();
+    wxTreeItemId id = animations_tree->GetSelection();
+    if(id.IsOk()) {
+        cbAnimEditFunc(id);
+    }
+}
+
+// Gets called by context menu Edit item
 void EditorFrame::onAnimItemEdit(wxCommandEvent& event) {
     event.StopPropagation();
-    
-    AnimationDialog dlg(this);
-    dlg.ShowModal();
+    wxPoint m_point = EditorFrame::ScreenToClient(wxGetMousePosition());
+    wxPoint m_obj = EditorFrame::ScreenToClient(animations_tree->GetScreenPosition());
+    wxPoint r = m_point - m_obj;
+    r.y -= 10;
+
+    wxTreeItemId id = animations_tree->HitTest(r);
+    if(id.IsOk()) {
+        cbAnimEditFunc(id);
+    }
 }
 
-void EditorFrame::onAnimTreeContextMenu(wxTreeEvent& event) {
+// Gets called when animation menu "delete" button is clicked.
+void EditorFrame::onAnimationDelete(wxCommandEvent& event) {
     event.StopPropagation();
-
-    wxPoint point = event.GetPoint();
-
-    wxMenu menu;
-    wxMenuItem *editItem = new wxMenuItem(&menu, wxID_ANY, _("Edit"));
-    this->Connect(editItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(EditorFrame::onAnimItemEdit));
-    menu.Append(editItem);
-    PopupMenu(&menu, point.x, point.y);
+    wxTreeItemId id = animations_tree->GetSelection();
+    if(id.IsOk()) {
+        cbAnimDeleteFunc(id);
+    }
 }
 
-void EditorFrame::onAnimTreeItemSelect(wxTreeEvent& event) {
+// Gets called by context menu Delete item
+void EditorFrame::onAnimItemDelete(wxCommandEvent& event) {
     event.StopPropagation();
+    wxPoint m_point = EditorFrame::ScreenToClient(wxGetMousePosition());
+    wxPoint m_obj = EditorFrame::ScreenToClient(animations_tree->GetScreenPosition());
+    wxPoint r = m_point - m_obj;
+    r.y -= 10;
 
-    // Handle information
-    AnimationTreeDataItem *item = (AnimationTreeDataItem*)animations_tree->GetItemData(event.GetItem());
+    wxTreeItemId id = animations_tree->HitTest(r);
+    if(id.IsOk()) {
+        cbAnimDeleteFunc(id);
+    }
+}
+
+void EditorFrame::cbAnimEditFunc(wxTreeItemId id) {
+    AnimationTreeDataItem *item = (AnimationTreeDataItem*)animations_tree->GetItemData(id);
+    if(item->getType() == AnimationTreeDataItem::SPRITE) {
+        sd_sprite *sprite = item->getSprite();
+        SpriteDialog dlg(this, sprite);
+        if(dlg.ShowModal() == wxID_OK) {
+            dlg.save();
+        }
+    } else if(item->getType() == AnimationTreeDataItem::ANIMATION) {
+        sd_bk_anim *animation = item->getAnimation();
+        AnimationDialog dlg(this, animation);
+        if(dlg.ShowModal() == wxID_OK) {
+            dlg.save();
+        }
+    }
+}
+
+void EditorFrame::cbAnimDeleteFunc(wxTreeItemId id) {
+    AnimationTreeDataItem *item = (AnimationTreeDataItem*)animations_tree->GetItemData(id);
     if(item->getType() == AnimationTreeDataItem::SPRITE) {
         sd_sprite *sprite = item->getSprite();
 
-    } else {
+    } else if(item->getType() == AnimationTreeDataItem::ANIMATION) {
         sd_bk_anim *animation = item->getAnimation();
 
     }
+}
 
-    // Redraw
+void EditorFrame::updateAnimationViews() {
+    wxTreeItemId id = animations_tree->GetSelection();
+    if(id.IsOk()) {
+        showAnimationTreeInfo(id);
+    }
+}
+
+// Shows a given sprite in sprite preview wxstaticbitmap
+void EditorFrame::loadPreviewSprite(sd_sprite *sprite) {
+    sd_rgba_image *img = sd_sprite_image_decode(
+        sprite->img, 
+        m_filedata->palettes[m_pal], 
+        m_remap-1);
+
+    // Scale & reposition
+    int w = img->w;
+    int h = img->h;
+    int nw,nh;
+    if(w > h) {
+        nw = 160;
+        nh = 100 * h / w;
+    } else {
+        nh = 100;
+        nw = 160 * w / h;
+    }
+    int pos_x = (160 - nw) / 2;
+    int pos_y = (100 - nh) / 2;
+
+    wxImage spImg = RGBAtoNative(img).Scale(nw, nh);
+    wxImage bg = wxImage(160, 100, true);
+    bg.Paste(spImg, pos_x, pos_y);
+    this->animations_preview_bitmap->SetBitmap(wxBitmap(bg));
+    sd_rgba_image_delete(img);
+}
+
+void EditorFrame::clearPreview() {
+    this->animations_preview_data->SetPage(wxString());
+    wxImage bg = wxImage(160, 100, true);
+    this->animations_preview_bitmap->SetBitmap(wxBitmap(bg));
+}
+
+// Updates preview info with the information from animation tree with given treeitem
+void EditorFrame::showAnimationTreeInfo(wxTreeItemId id) {
+    // Handle information
+    AnimationTreeDataItem *item = (AnimationTreeDataItem*)animations_tree->GetItemData(id);
+    if(item->getType() == AnimationTreeDataItem::SPRITE) {
+        sd_sprite *sprite = item->getSprite();
+        loadPreviewSprite(sprite);
+
+        wxString pos_x = wxString::Format("%d", sprite->pos_x);
+        wxString pos_y = wxString::Format("%d", sprite->pos_y);
+        wxString size_x = wxString::Format("%d", sprite->img->w);
+        wxString size_y = wxString::Format("%d", sprite->img->h);
+        wxString index = wxString::Format("%d", sprite->index);
+        wxString missing = wxString::Format("%d", sprite->missing);
+        wxString content(" \
+            <html> \
+            <body> \
+                <strong>Sprite</strong><br />\
+                Position = " + pos_x + "," + pos_y + "<br /> \
+                Size = " + size_x + "," + size_y + "<br /> \
+                Index/Missing = " + index + "/" + missing + " \
+            </body> \
+            </html> \
+        ");
+        this->animations_preview_data->SetPage(content);
+
+    } else if(item->getType() == AnimationTreeDataItem::ANIMATION) {
+        sd_bk_anim *bkanim = item->getAnimation();
+        if(bkanim->animation->frame_count > 0) {
+            loadPreviewSprite(bkanim->animation->sprites[0]);
+        }
+
+        wxString astr(bkanim->animation->anim_string);
+        wxString content(" \
+            <html> \
+            <body> \
+                <strong>Animation</strong><br />\
+                String: " + astr + "\
+            </body> \
+            </html> \
+        ");
+        this->animations_preview_data->SetPage(content);
+    } else {
+        clearPreview();
+    }
+}
+
+// Creates and shows a context menu for animation tree control
+void EditorFrame::onAnimTreeContextMenu(wxTreeEvent& event) {
+    event.StopPropagation();
+
+    wxPoint point = ScreenToClient(wxGetMousePosition());
+
+    wxMenu menu;
+    wxMenuItem *editItem = new wxMenuItem(&menu, wxID_ANY, _("Edit"));
+    wxMenuItem *deleteItem = new wxMenuItem(&menu, wxID_ANY, _("Delete"));
+    this->Connect(
+        editItem->GetId(), 
+        wxEVT_COMMAND_MENU_SELECTED, 
+        wxCommandEventHandler(EditorFrame::onAnimItemEdit));
+    this->Connect(
+        deleteItem->GetId(), 
+        wxEVT_COMMAND_MENU_SELECTED, 
+        wxCommandEventHandler(EditorFrame::onAnimItemDelete));
+    menu.Append(editItem);
+    menu.Append(deleteItem);
+    PopupMenu(&menu, point.x, point.y);
+}
+
+// Action for selecting animation tree item (animation,sprite)
+void EditorFrame::onAnimTreeItemSelect(wxTreeEvent& event) {
+    event.StopPropagation();
+    showAnimationTreeInfo(event.GetItem());
     this->Update();
 }
 
 void EditorFrame::onBackgroundSave(wxCommandEvent& event) {
     // Ask the user where to save
-    wxFileDialog sd(this, _("PNG (Portable Network Graphics)"), _(""), _(""), _("PNG files (*.png)|*.png"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
+    wxFileDialog sd(this, 
+        _("PNG (Portable Network Graphics)"), 
+        _(""),
+        _(""), 
+        _("PNG files (*.png)|*.png"), 
+        wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
     if (sd.ShowModal() != wxID_OK) {
         return;
     }
@@ -311,7 +503,7 @@ void EditorFrame::onMenuAbout(wxCommandEvent &event) {
     info.SetName(_("wxBKEditor"));
     info.SetVersion(_("0.1 Alpha"));
     info.SetDescription(_("One Must Fall 2097 BK file editor"));
-    info.SetCopyright(_T("(C) 2013 Tuomas Virtanen <katajakasa@gmail.com>"));
+    info.SetCopyright(_T("(C) 2013-2014 Tuomas Virtanen <katajakasa@gmail.com>"));
     info.SetWebSite(_("https://github.com/omf2097/wxBKEditor"));
     wxAboutBox(info);
 }

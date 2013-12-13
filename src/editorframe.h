@@ -3,6 +3,7 @@
 
 #include "gui.h"
 #include "animationdialog.h"
+#include "spritedialog.h"
 #include <shadowdive/shadowdive.h>
 
 class EditorFrame: public BaseFrame {
@@ -26,9 +27,12 @@ protected:
     virtual void onAnimTreeItemSelect(wxTreeEvent& event);
     virtual void onMenuSave(wxCommandEvent& event);
     virtual void onMenuSaveAs(wxCommandEvent& event);
+    virtual void onAnimationEdit(wxCommandEvent& event);
+    virtual void onAnimationDelete(wxCommandEvent& event);
     
     // Local
     virtual void onAnimItemEdit(wxCommandEvent& event);
+    virtual void onAnimItemDelete(wxCommandEvent& event);
     
 public:
     EditorFrame(wxFrame *frame);
@@ -41,6 +45,14 @@ public:
     void reset();
     void refreshFields();
     void showSelectedPalette();
+
+    void cbAnimEditFunc(wxTreeItemId id);
+    void cbAnimDeleteFunc(wxTreeItemId id);
+    void updateAnimationViews();
+    void showAnimationTreeInfo(wxTreeItemId id);
+    void updateBgImage();
+    void loadPreviewSprite(sd_sprite *ani);
+    void clearPreview();
 };
 
 #endif // _EDITORFRAME_H

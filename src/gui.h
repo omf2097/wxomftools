@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Oct  8 2012)
+// C++ code generated with wxFormBuilder (version Nov  6 2013)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -28,6 +28,7 @@
 #include <wx/statbmp.h>
 #include <wx/choice.h>
 #include <wx/treectrl.h>
+#include <wx/html/htmlwin.h>
 #include <wx/aui/auibook.h>
 #include <wx/frame.h>
 #include <wx/gbsizer.h>
@@ -78,7 +79,10 @@ class BaseFrame : public wxFrame
 		wxButton* animation_ctrl_delete_button;
 		wxButton* animation_ctrl_edit_button;
 		wxButton* animation_ctrl_add_button;
+		wxButton* animation_ctrl_add_sprite_button;
 		wxTreeCtrl* animations_tree;
+		wxStaticBitmap* animations_preview_bitmap;
+		wxHtmlWindow* animations_preview_data;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onMenuNew( wxCommandEvent& event ) { event.Skip(); }
@@ -100,6 +104,7 @@ class BaseFrame : public wxFrame
 		virtual void onAnimationDelete( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onAnimationEdit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onAnimationAdd( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onSpriteAdd( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onAnimTreeContextMenu( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onAnimTreeItemSelect( wxTreeEvent& event ) { event.Skip(); }
 		
@@ -121,12 +126,6 @@ class AnimationBaseDialog : public wxDialog
 	
 	protected:
 		wxAuiNotebook* ani_base_notebook;
-		wxPanel* tab_sprites;
-		wxPanel* tab_sprite_ctrl_panel;
-		wxButton* ani_add_sprite_button;
-		wxButton* ani_del_sprite_button;
-		wxButton* ani_edit_sprite_button;
-		wxTreeCtrl* sprite_tree_panel;
 		wxPanel* tab_settings;
 		wxStaticText* static_chain_if_hit;
 		wxTextCtrl* chain_if_hit_field;
@@ -147,17 +146,33 @@ class AnimationBaseDialog : public wxDialog
 		wxStdDialogButtonSizer* ani_base_buttons;
 		wxButton* ani_base_buttonsOK;
 		wxButton* ani_base_buttonsCancel;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void onSpriteAdd( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onSpriteDelete( wxCommandEvent& event ) { event.Skip(); }
-		virtual void onSpriteEdit( wxCommandEvent& event ) { event.Skip(); }
-		
 	
 	public:
 		
-		AnimationBaseDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Animation"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 829,546 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		AnimationBaseDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Animation"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,500 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~AnimationBaseDialog();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class SpriteBaseDialog
+///////////////////////////////////////////////////////////////////////////////
+class SpriteBaseDialog : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxAuiNotebook* sprite_base_notebook;
+		wxPanel* tab_settings;
+		wxPanel* tab_sprite;
+		wxStdDialogButtonSizer* sprite_base_buttons;
+		wxButton* sprite_base_buttonsOK;
+		wxButton* sprite_base_buttonsCancel;
+	
+	public:
+		
+		SpriteBaseDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Sprite"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,500 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		~SpriteBaseDialog();
 	
 };
 
