@@ -5,9 +5,9 @@ SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-scripts)
 find_package(wxwidgets3)
 find_package(shadowdive)
 
-set(CMAKE_C_FLAGS "-Wall -std=c++11 -ggdb -Werror")
-set(CMAKE_C_FLAGS_DEBUG "-Wall -std=c++11 -ggdb -Werror")
-set(CMAKE_C_FLAGS_RELEASE "-Wall -std=c++11 -O2 -march=native -Werror -s")
+set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -Werror ${WX_OPTS}")
+set(CMAKE_CXX_FLAGS_DEBUG "-ggdb")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -march=native -s")
 
 add_executable(wxbkeditor 
     src/gui.cpp

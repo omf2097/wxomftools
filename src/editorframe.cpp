@@ -355,10 +355,10 @@ void EditorFrame::cbAnimEditFunc(wxTreeItemId id) {
 void EditorFrame::cbAnimDeleteFunc(wxTreeItemId id) {
     AnimationTreeDataItem *item = (AnimationTreeDataItem*)animations_tree->GetItemData(id);
     if(item->getType() == AnimationTreeDataItem::SPRITE) {
-        sd_sprite *sprite = item->getSprite();
+        //sd_sprite *sprite = item->getSprite();
 
     } else if(item->getType() == AnimationTreeDataItem::ANIMATION) {
-        sd_bk_anim *animation = item->getAnimation();
+        //sd_bk_anim *animation = item->getAnimation();
 
     }
 }
