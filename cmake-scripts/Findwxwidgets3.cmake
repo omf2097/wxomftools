@@ -51,7 +51,7 @@ ELSE(MINGW)
     )
 
     EXECUTE_PROCESS(
-        COMMAND ${WX_CONFIG} "--libs"
+        COMMAND ${WX_CONFIG} "--libs" "std,aui"
         OUTPUT_VARIABLE WX_LIB_OPTS
     )
 
