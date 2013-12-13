@@ -335,7 +335,7 @@
                         <object class="auinotebookpage" expanded="0">
                             <property name="bitmap"></property>
                             <property name="label">Information</property>
-                            <property name="select">0</property>
+                            <property name="select">1</property>
                             <object class="wxPanel" expanded="0">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
@@ -2947,7 +2947,7 @@
                         <object class="auinotebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Animations</property>
-                            <property name="select">1</property>
+                            <property name="select">0</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
@@ -5460,7 +5460,7 @@
                                                             <property name="maxlength"></property>
                                                             <property name="min_size"></property>
                                                             <property name="minimize_button">0</property>
-                                                            <property name="minimum_size">-1,100</property>
+                                                            <property name="minimum_size">-1,160</property>
                                                             <property name="moveable">1</property>
                                                             <property name="name">anim_string_field</property>
                                                             <property name="pane_border">1</property>

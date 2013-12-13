@@ -158,7 +158,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	tab_info->SetSizer( info_base_sizer );
 	tab_info->Layout();
 	info_base_sizer->Fit( tab_info );
-	base_tabs->AddPage( tab_info, wxT("Information"), false, wxNullBitmap );
+	base_tabs->AddPage( tab_info, wxT("Information"), true, wxNullBitmap );
 	tab_background = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* bg_base_sizer;
 	bg_base_sizer = new wxFlexGridSizer( 1, 2, 0, 0 );
@@ -367,7 +367,7 @@ BaseFrame::BaseFrame( wxWindow* parent, wxWindowID id, const wxString& title, co
 	tab_animations->SetSizer( animations_base_sizer );
 	tab_animations->Layout();
 	animations_base_sizer->Fit( tab_animations );
-	base_tabs->AddPage( tab_animations, wxT("Animations"), true, wxNullBitmap );
+	base_tabs->AddPage( tab_animations, wxT("Animations"), false, wxNullBitmap );
 	
 	base_sizer->Add( base_tabs, 1, wxEXPAND | wxALL, 0 );
 	
@@ -525,7 +525,7 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	tab_settings_misc_in_sizer->Add( static_anim_string, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	anim_string_field = new wxTextCtrl( tab_settings, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
-	anim_string_field->SetMinSize( wxSize( -1,100 ) );
+	anim_string_field->SetMinSize( wxSize( -1,160 ) );
 	
 	tab_settings_misc_in_sizer->Add( anim_string_field, 0, wxALL|wxEXPAND, 5 );
 	
