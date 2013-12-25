@@ -1,3 +1,5 @@
 *.fbp~
 *.txt~
+*.cpp~
+*.h~
 build/
