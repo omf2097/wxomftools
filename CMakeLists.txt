@@ -19,6 +19,16 @@ add_executable(wxbkeditor
     src/shared/spritedialog.cpp
 )
 
+add_executable(wxafeditor 
+    src/wxafeditor/gui.cpp
+    src/wxafeditor/app.cpp
+    src/wxafeditor/editorframe.cpp
+    src/wxafeditor/animationtreedataitem.cpp
+    src/shared/shared.cpp
+    src/shared/animationdialog.cpp
+    src/shared/spritedialog.cpp
+)
+
 set(COREINCS
     src/shared/
     ${WXWIDGETS_INCLUDE_DIR} 
@@ -36,3 +46,4 @@ ENDIF(MINGW)
 
 include_directories(${COREINCS})
 target_link_libraries(wxbkeditor ${CORELIBS})
+target_link_libraries(wxafeditor ${CORELIBS})

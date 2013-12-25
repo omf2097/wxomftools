@@ -1,12 +1,12 @@
 #ifndef _EDITORFRAME_H
 #define _EDITORFRAME_H
 
+#include <shadowdive/shadowdive.h>
 #include "gui.h"
 #include "animationdialog.h"
 #include "spritedialog.h"
-#include <shadowdive/shadowdive.h>
 
-class EditorFrame: public BaseFrame {
+class EditorFrame : public BKBaseFrame {
 protected:
     sd_bk_file *m_filedata;
     wxString m_filename;

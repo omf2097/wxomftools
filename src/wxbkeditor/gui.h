@@ -36,9 +36,9 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class BaseFrame
+/// Class BKBaseFrame
 ///////////////////////////////////////////////////////////////////////////////
-class BaseFrame : public wxFrame 
+class BKBaseFrame : public wxFrame 
 {
 	private:
 	
@@ -71,7 +71,7 @@ class BaseFrame : public wxFrame
 		wxButton* palette_ctrl_newpal_button;
 		wxButton* palette_ctrl_newremap_button;
 		wxPanel* palette_grid_panel;
-		wxGridSizer* palette_grid_sizer;
+		wxFlexGridSizer* palette_grid_sizer;
 		wxPanel* tab_animations;
 		wxPanel* animations_ctrl_panel;
 		wxButton* animation_ctrl_delete_button;
@@ -81,6 +81,7 @@ class BaseFrame : public wxFrame
 		wxTreeCtrl* animations_tree;
 		wxStaticBitmap* animations_preview_bitmap;
 		wxHtmlWindow* animations_preview_data;
+		wxPanel* tab_sounds;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onMenuNew( wxCommandEvent& event ) { event.Skip(); }
@@ -109,9 +110,9 @@ class BaseFrame : public wxFrame
 	
 	public:
 		
-		BaseFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxBKEditor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		BKBaseFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxBKEditor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
-		~BaseFrame();
+		~BKBaseFrame();
 	
 };
 

@@ -1,12 +1,14 @@
-#include "editorframe.h"
-#include "animationtreedataitem.h"
+#include <cstdio>
+
 #include <wx/filedlg.h>
 #include <wx/msgdlg.h>
 #include <wx/aboutdlg.h>
 
-#include <cstdio>
+#include "license.h"
+#include "editorframe.h"
+#include "animationtreedataitem.h"
 
-EditorFrame::EditorFrame(wxFrame *frame) : BaseFrame(frame) {
+EditorFrame::EditorFrame(wxFrame *frame) : BKBaseFrame(frame) {
     // Initialize
     m_filedata = NULL;
     reset();
@@ -258,13 +260,13 @@ void EditorFrame::showSelectedPalette() {
         label->SetBackgroundColour(wxColour(r,g,b));
         label->SetForegroundColour(wxColour(255,255,255));
         //label->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(wxBKEditorFrame::onChangePaletteColor), NULL, this);
-        this->palette_grid_sizer->Add(label, 1, wxEXPAND, 0);
+        this->palette_grid_sizer->Add(label, 1, wxEXPAND|wxALL, 0);
     }
 
     // Update panel and sizer contents
     palette_grid_panel->Thaw();
     this->palette_grid_panel->Layout();
-    this->palette_grid_sizer->FitInside(this->palette_grid_panel);
+    this->palette_grid_sizer->Fit(this->palette_grid_panel);
     this->Update();
 }
 
@@ -501,9 +503,10 @@ void EditorFrame::onBackgroundSave(wxCommandEvent& event) {
 void EditorFrame::onMenuAbout(wxCommandEvent &event) {
     wxAboutDialogInfo info;
     info.SetName(_("wxBKEditor"));
-    info.SetVersion(_("0.1 Alpha"));
+    info.SetVersion(_("0.2"));
     info.SetDescription(_("One Must Fall 2097 BK file editor"));
-    info.SetCopyright(_T("(C) 2013-2014 Tuomas Virtanen <katajakasa@gmail.com>"));
-    info.SetWebSite(_("https://github.com/omf2097/wxBKEditor"));
+    info.SetCopyright(_T("(C) 2013 Tuomas Virtanen <katajakasa@gmail.com>"));
+    info.SetWebSite(_("https://github.com/omf2097/wxomftools"));
+    info.SetLicense(_(mit_license));
     wxAboutBox(info);
 }
