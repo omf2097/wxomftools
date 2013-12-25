@@ -13,13 +13,14 @@ add_executable(wxbkeditor
     src/wxbkeditor/gui.cpp
     src/wxbkeditor/app.cpp
     src/wxbkeditor/editorframe.cpp
-    src/wxbkeditor/animationdialog.cpp
-    src/wxbkeditor/spritedialog.cpp
     src/wxbkeditor/animationtreedataitem.cpp
+    src/shared/shared.cpp
+    src/shared/animationdialog.cpp
+    src/shared/spritedialog.cpp
 )
 
 set(COREINCS
-    src/wxbkeditor/
+    src/shared/
     ${WXWIDGETS_INCLUDE_DIR} 
     ${SHADOWDIVE_INCLUDE_DIR} 
 )

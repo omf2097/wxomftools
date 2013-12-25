@@ -31,8 +31,6 @@
 #include <wx/html/htmlwin.h>
 #include <wx/aui/auibook.h>
 #include <wx/frame.h>
-#include <wx/gbsizer.h>
-#include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -114,65 +112,6 @@ class BaseFrame : public wxFrame
 		BaseFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxBKEditor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~BaseFrame();
-	
-};
-
-///////////////////////////////////////////////////////////////////////////////
-/// Class AnimationBaseDialog
-///////////////////////////////////////////////////////////////////////////////
-class AnimationBaseDialog : public wxDialog 
-{
-	private:
-	
-	protected:
-		wxAuiNotebook* ani_base_notebook;
-		wxPanel* tab_settings;
-		wxStaticText* static_chain_if_hit;
-		wxTextCtrl* chain_if_hit_field;
-		wxStaticText* static_chain_if_not_hit;
-		wxTextCtrl* chain_if_not_hit_field;
-		wxStaticText* static_load_on_start;
-		wxTextCtrl* load_on_start_field;
-		wxStaticText* static_probability;
-		wxTextCtrl* probability_field;
-		wxStaticText* static_hazard_damage;
-		wxTextCtrl* hazard_damage_field;
-		wxStaticText* static_start_x;
-		wxTextCtrl* start_x_field;
-		wxStaticText* static_start_y;
-		wxTextCtrl* start_y_field;
-		wxStaticText* static_anim_string;
-		wxTextCtrl* anim_string_field;
-		wxStdDialogButtonSizer* ani_base_buttons;
-		wxButton* ani_base_buttonsOK;
-		wxButton* ani_base_buttonsCancel;
-	
-	public:
-		
-		AnimationBaseDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Animation"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,500 ), long style = wxDEFAULT_DIALOG_STYLE ); 
-		~AnimationBaseDialog();
-	
-};
-
-///////////////////////////////////////////////////////////////////////////////
-/// Class SpriteBaseDialog
-///////////////////////////////////////////////////////////////////////////////
-class SpriteBaseDialog : public wxDialog 
-{
-	private:
-	
-	protected:
-		wxAuiNotebook* sprite_base_notebook;
-		wxPanel* tab_settings;
-		wxPanel* tab_sprite;
-		wxStdDialogButtonSizer* sprite_base_buttons;
-		wxButton* sprite_base_buttonsOK;
-		wxButton* sprite_base_buttonsCancel;
-	
-	public:
-		
-		SpriteBaseDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Sprite"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,500 ), long style = wxDEFAULT_DIALOG_STYLE ); 
-		~SpriteBaseDialog();
 	
 };
 

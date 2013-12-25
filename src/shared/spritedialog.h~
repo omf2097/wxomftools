@@ -1,7 +1,7 @@
 #ifndef _SPRITEDIALOG_H
 #define _SPRITEDIALOG_H
 
-#include "gui.h"
+#include "shared.h"
 #include <shadowdive/shadowdive.h>
 
 class SpriteDialog : public SpriteBaseDialog {
