@@ -10,16 +10,16 @@ set(CMAKE_CXX_FLAGS_DEBUG "-ggdb")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -march=native -s")
 
 add_executable(wxbkeditor 
-    src/gui.cpp
-    src/app.cpp
-    src/editorframe.cpp
-    src/animationdialog.cpp
-    src/spritedialog.cpp
-    src/animationtreedataitem.cpp
+    src/wxbkeditor/gui.cpp
+    src/wxbkeditor/app.cpp
+    src/wxbkeditor/editorframe.cpp
+    src/wxbkeditor/animationdialog.cpp
+    src/wxbkeditor/spritedialog.cpp
+    src/wxbkeditor/animationtreedataitem.cpp
 )
 
 set(COREINCS
-    src/
+    src/wxbkeditor/
     ${WXWIDGETS_INCLUDE_DIR} 
     ${SHADOWDIVE_INCLUDE_DIR} 
 )
