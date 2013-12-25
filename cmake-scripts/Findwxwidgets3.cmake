@@ -36,7 +36,7 @@ IF(MINGW)
     SET(WX_OPTS "")
 ELSE(MINGW)
     FIND_PROGRAM(WX_CONFIG
-        NAMES wx-config-3.0 wx-config-2.9
+        NAMES wx-config-3.0 wx-config-2.9 wx-config
         PATHS
             /usr/bin
             /usr/local/bin
