@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Nov  5 2013)
+// C++ code generated with wxFormBuilder (version Feb 26 2014)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -158,7 +158,7 @@ BKBaseFrame::BKBaseFrame( wxWindow* parent, wxWindowID id, const wxString& title
 	tab_info->SetSizer( info_base_sizer );
 	tab_info->Layout();
 	info_base_sizer->Fit( tab_info );
-	base_tabs->AddPage( tab_info, wxT("Information"), false, wxNullBitmap );
+	base_tabs->AddPage( tab_info, wxT("Information"), true, wxNullBitmap );
 	tab_background = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* bg_base_sizer;
 	bg_base_sizer = new wxFlexGridSizer( 1, 2, 0, 0 );
@@ -327,7 +327,7 @@ BKBaseFrame::BKBaseFrame( wxWindow* parent, wxWindowID id, const wxString& title
 	tab_palette->SetSizer( palette_base_sizer );
 	tab_palette->Layout();
 	palette_base_sizer->Fit( tab_palette );
-	base_tabs->AddPage( tab_palette, wxT("Palettes"), true, wxNullBitmap );
+	base_tabs->AddPage( tab_palette, wxT("Palettes"), false, wxNullBitmap );
 	tab_animations = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* animations_base_sizer;
 	animations_base_sizer = new wxFlexGridSizer( 1, 2, 0, 0 );
