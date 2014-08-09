@@ -3,6 +3,7 @@
 #include <wx/filedlg.h>
 #include <wx/msgdlg.h>
 #include <wx/aboutdlg.h>
+#include <wx/sizer.h>
 
 #include "license.h"
 #include "editorframe.h"
@@ -234,15 +235,17 @@ void EditorFrame::onRemapChoice(wxCommandEvent& event) {
 }
 
 void EditorFrame::showSelectedPalette() {
-    this->palette_grid_sizer->Clear(true);
-
     // Get palette table
     sd_palette *pal = m_filedata->palettes[m_pal];
 
+    // Create a sizer
+    wxGridSizer *palette_grid_sizer = new wxGridSizer(16, 16, 0, 0);
+
     // Draw buttons
     wxStaticText *label;
+    wxPanel *panel;
+    wxGridSizer *sizer;
     uint8_t r,g,b;
-    palette_grid_panel->Freeze();
     for(int i = 0; i < 256; i++) {
         // Find color
         if(m_remap > 0) {
@@ -255,18 +258,31 @@ void EditorFrame::showSelectedPalette() {
             b = pal->data[i][2];
         }
 
-        // Create color area + add it to the sizer
-        label = new wxStaticText(palette_grid_panel, wxID_ANY, wxDecToHex(i));
-        label->SetBackgroundColour(wxColour(r,g,b));
+        // Create a panel
+        panel = new wxPanel(palette_grid_panel, wxID_ANY);
+        panel->SetBackgroundColour(wxColour(r,g,b));
+        panel->SetForegroundColour(wxColour(r,g,b));
+        sizer = new wxGridSizer(1,1,0,0);
+
+        // Create color area + add it to the panel
+        label = new wxStaticText(panel, wxID_ANY, wxDecToHex(i));
         label->SetForegroundColour(wxColour(255,255,255));
         //label->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(wxBKEditorFrame::onChangePaletteColor), NULL, this);
-        this->palette_grid_sizer->Add(label, 1, wxEXPAND|wxALL, 0);
+        sizer->Add(label, 0, wxEXPAND, 0);
+
+        // Set sizer for panel
+        panel->SetSizer(sizer);
+        panel->Layout();
+        sizer->Fit(panel);
+
+        // Add sizer to palette sizer
+        palette_grid_sizer->Add(sizer, 0, wxEXPAND|wxALL, 0);
     }
 
     // Update panel and sizer contents
-    palette_grid_panel->Thaw();
-    this->palette_grid_panel->Layout();
-    this->palette_grid_sizer->Fit(this->palette_grid_panel);
+    palette_grid_panel->SetSizer(palette_grid_sizer);
+    palette_grid_panel->Layout();
+    palette_grid_sizer->Fit(this->palette_grid_panel);
     this->Update();
 }
 
