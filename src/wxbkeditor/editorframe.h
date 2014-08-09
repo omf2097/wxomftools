@@ -18,6 +18,7 @@ protected:
     virtual void onMenuExit(wxCommandEvent& event);
     virtual void onMenuAbout(wxCommandEvent& event);
     virtual void onMenuOpen(wxCommandEvent& event);
+    virtual void onMenuNew(wxCommandEvent& event);
     virtual void onBackgroundSave(wxCommandEvent& event);
     virtual void onPaletteChoice(wxCommandEvent& event);
 	virtual void onRemapChoice(wxCommandEvent& event);
