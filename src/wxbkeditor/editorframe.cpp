@@ -61,7 +61,15 @@ void EditorFrame::updateTitle() {
 void EditorFrame::onMenuSave(wxCommandEvent& event) {
     event.StopPropagation();
     
-    sd_bk_save(m_filedata, m_filename);
+    int ret = sd_bk_save(m_filedata, m_filename);
+    if(ret != SD_SUCCESS) {
+        wxMessageDialog md(
+            this, 
+            wxString("Error while attempting to save BK file."), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+    }
 }
 
 void EditorFrame::onMenuSaveAs(wxCommandEvent& event) {
@@ -78,7 +86,15 @@ void EditorFrame::onMenuSaveAs(wxCommandEvent& event) {
         return;
     }
     
-    sd_bk_save(m_filedata, (char*)sd.GetPath().mb_str().data());
+    int ret = sd_bk_save(m_filedata, (char*)sd.GetPath().mb_str().data());
+    if(ret != SD_SUCCESS) {
+        wxMessageDialog md(
+            this, 
+            wxString("Error while attempting to save BK file."), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+    }
 }
 
 void EditorFrame::onMenuExit(wxCommandEvent& event) {
@@ -333,6 +349,18 @@ void EditorFrame::showSelectedPalette() {
 }
 
 void EditorFrame::onPaletteLoad(wxCommandEvent& event) {
+    sd_palette *pal;
+    pal = sd_bk_get_palette(m_filedata, m_pal);
+    if(pal == NULL) {
+        wxMessageDialog md(
+            this, 
+            wxString("Unable load palette; select a valid target palette first-"), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+        return;
+    }
+
     // Ask the user where to save
     wxFileDialog sd(this, 
         _("GPL (Gimp Palette)"), 
@@ -346,12 +374,22 @@ void EditorFrame::onPaletteLoad(wxCommandEvent& event) {
     }
 
     // Save
-    sd_palette_from_gimp_palette(
-        m_filedata->palettes[m_pal],
-        (char*)sd.GetPath().mb_str().data());
+    sd_palette_from_gimp_palette(pal, (char*)sd.GetPath().mb_str().data());
 }
 
 void EditorFrame::onPaletteSave(wxCommandEvent& event) {
+    sd_palette *pal;
+    pal = sd_bk_get_palette(m_filedata, m_pal);
+    if(pal == NULL) {
+        wxMessageDialog md(
+            this, 
+            wxString("Unable save palette; select a valid source palette first."), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+        return;
+    }
+
     // Ask the user where to save
     wxFileDialog sd(this, 
         _("GPL (Gimp Palette)"), 
