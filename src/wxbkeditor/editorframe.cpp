@@ -280,8 +280,16 @@ void EditorFrame::showSelectedPalette() {
     // Get palette table
     sd_palette *pal = m_filedata->palettes[m_pal];
 
+    this->Freeze();
+
     // Create a sizer
-    wxGridSizer *palette_grid_sizer = new wxGridSizer(16, 16, 0, 0);
+    wxFlexGridSizer *palette_grid_sizer = new wxFlexGridSizer(16, 16, 0, 0);
+    palette_grid_sizer->SetFlexibleDirection( wxBOTH );
+    palette_grid_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+    for(int i = 0; i < 16; i++) {
+        palette_grid_sizer->AddGrowableCol(i);
+        palette_grid_sizer->AddGrowableRow(i);
+    }
 
     // Draw buttons
     wxStaticText *label;
@@ -310,22 +318,18 @@ void EditorFrame::showSelectedPalette() {
         label = new wxStaticText(panel, wxID_ANY, wxDecToHex(i));
         label->SetForegroundColour(wxColour(255,255,255));
         //label->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(wxBKEditorFrame::onChangePaletteColor), NULL, this);
+        
         sizer->Add(label, 0, wxEXPAND, 0);
-
-        // Set sizer for panel
         panel->SetSizer(sizer);
-        panel->Layout();
-        sizer->Fit(panel);
 
         // Add sizer to palette sizer
-        palette_grid_sizer->Add(sizer, 0, wxEXPAND|wxALL, 0);
+        palette_grid_sizer->Add(panel, 0, wxEXPAND|wxALL, 0);
     }
 
     // Update panel and sizer contents
     palette_grid_panel->SetSizer(palette_grid_sizer);
     palette_grid_panel->Layout();
-    palette_grid_sizer->Fit(this->palette_grid_panel);
-    this->Update();
+    this->Thaw();
 }
 
 void EditorFrame::onPaletteLoad(wxCommandEvent& event) {
