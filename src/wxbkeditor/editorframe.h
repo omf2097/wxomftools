@@ -24,6 +24,7 @@ protected:
 	virtual void onRemapChoice(wxCommandEvent& event);
     virtual void onPaletteLoad(wxCommandEvent& event);
     virtual void onPaletteSave(wxCommandEvent& event);
+    virtual void onNewPalette(wxCommandEvent& event);
     virtual void onChangePaletteColor(wxMouseEvent& event);
     virtual void onAnimTreeContextMenu(wxTreeEvent& event);
     virtual void onAnimTreeItemSelect(wxTreeEvent& event);

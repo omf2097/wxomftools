@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  6 2014)
+// C++ code generated with wxFormBuilder (version Feb 26 2014)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -266,9 +266,6 @@ BKBaseFrame::BKBaseFrame( wxWindow* parent, wxWindowID id, const wxString& title
 	palette_ctrl_newpal_button = new wxButton( palette_ctrl_panel, wxID_ANY, wxT("New palette"), wxDefaultPosition, wxDefaultSize, 0 );
 	palette_ctrl_manage_box->Add( palette_ctrl_newpal_button, 0, wxALL|wxEXPAND, 5 );
 	
-	palette_ctrl_newremap_button = new wxButton( palette_ctrl_panel, wxID_ANY, wxT("New remapping"), wxDefaultPosition, wxDefaultSize, 0 );
-	palette_ctrl_manage_box->Add( palette_ctrl_newremap_button, 0, wxALL|wxEXPAND, 5 );
-	
 	
 	palette_ctrl_sizer->Add( palette_ctrl_manage_box, 1, wxALL|wxEXPAND, 5 );
 	
@@ -281,6 +278,46 @@ BKBaseFrame::BKBaseFrame( wxWindow* parent, wxWindowID id, const wxString& title
 	palette_grid_panel = new wxPanel( tab_palette, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER|wxTAB_TRAVERSAL );
 	palette_grid_panel->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
 	
+	palette_grid_sizer = new wxFlexGridSizer( 16, 16, 0, 0 );
+	palette_grid_sizer->AddGrowableCol( 0 );
+	palette_grid_sizer->AddGrowableCol( 1 );
+	palette_grid_sizer->AddGrowableCol( 2 );
+	palette_grid_sizer->AddGrowableCol( 3 );
+	palette_grid_sizer->AddGrowableCol( 4 );
+	palette_grid_sizer->AddGrowableCol( 5 );
+	palette_grid_sizer->AddGrowableCol( 6 );
+	palette_grid_sizer->AddGrowableCol( 7 );
+	palette_grid_sizer->AddGrowableCol( 8 );
+	palette_grid_sizer->AddGrowableCol( 9 );
+	palette_grid_sizer->AddGrowableCol( 10 );
+	palette_grid_sizer->AddGrowableCol( 11 );
+	palette_grid_sizer->AddGrowableCol( 12 );
+	palette_grid_sizer->AddGrowableCol( 13 );
+	palette_grid_sizer->AddGrowableCol( 14 );
+	palette_grid_sizer->AddGrowableCol( 15 );
+	palette_grid_sizer->AddGrowableRow( 0 );
+	palette_grid_sizer->AddGrowableRow( 1 );
+	palette_grid_sizer->AddGrowableRow( 2 );
+	palette_grid_sizer->AddGrowableRow( 3 );
+	palette_grid_sizer->AddGrowableRow( 4 );
+	palette_grid_sizer->AddGrowableRow( 5 );
+	palette_grid_sizer->AddGrowableRow( 6 );
+	palette_grid_sizer->AddGrowableRow( 7 );
+	palette_grid_sizer->AddGrowableRow( 8 );
+	palette_grid_sizer->AddGrowableRow( 9 );
+	palette_grid_sizer->AddGrowableRow( 10 );
+	palette_grid_sizer->AddGrowableRow( 11 );
+	palette_grid_sizer->AddGrowableRow( 12 );
+	palette_grid_sizer->AddGrowableRow( 13 );
+	palette_grid_sizer->AddGrowableRow( 14 );
+	palette_grid_sizer->AddGrowableRow( 15 );
+	palette_grid_sizer->SetFlexibleDirection( wxBOTH );
+	palette_grid_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_ALL );
+	
+	
+	palette_grid_panel->SetSizer( palette_grid_sizer );
+	palette_grid_panel->Layout();
+	palette_grid_sizer->Fit( palette_grid_panel );
 	palette_base_sizer->Add( palette_grid_panel, 1, wxEXPAND | wxALL, 0 );
 	
 	
@@ -363,43 +400,6 @@ BKBaseFrame::BKBaseFrame( wxWindow* parent, wxWindowID id, const wxString& title
 	animations_base_sizer->Fit( tab_animations );
 	base_tabs->AddPage( tab_animations, wxT("Animations"), false, wxNullBitmap );
 	tab_sounds = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* sounds_base_sizer;
-	sounds_base_sizer = new wxFlexGridSizer( 0, 2, 0, 0 );
-	sounds_base_sizer->SetFlexibleDirection( wxBOTH );
-	sounds_base_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	sound_table_grid = new wxGrid( tab_sounds, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	
-	// Grid
-	sound_table_grid->CreateGrid( 5, 1 );
-	sound_table_grid->EnableEditing( true );
-	sound_table_grid->EnableGridLines( true );
-	sound_table_grid->EnableDragGridSize( false );
-	sound_table_grid->SetMargins( 0, 0 );
-	
-	// Columns
-	sound_table_grid->SetColSize( 0, 200 );
-	sound_table_grid->EnableDragColMove( false );
-	sound_table_grid->EnableDragColSize( true );
-	sound_table_grid->SetColLabelSize( 30 );
-	sound_table_grid->SetColLabelValue( 0, wxT("Global Sound ID") );
-	sound_table_grid->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
-	// Rows
-	sound_table_grid->EnableDragRowSize( true );
-	sound_table_grid->SetRowLabelSize( 40 );
-	sound_table_grid->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
-	
-	// Label Appearance
-	
-	// Cell Defaults
-	sound_table_grid->SetDefaultCellAlignment( wxALIGN_LEFT, wxALIGN_TOP );
-	sounds_base_sizer->Add( sound_table_grid, 0, wxALL|wxEXPAND, 0 );
-	
-	
-	tab_sounds->SetSizer( sounds_base_sizer );
-	tab_sounds->Layout();
-	sounds_base_sizer->Fit( tab_sounds );
 	base_tabs->AddPage( tab_sounds, wxT("Sound Table"), false, wxNullBitmap );
 	
 	base_sizer->Add( base_tabs, 1, wxEXPAND | wxALL, 0 );
@@ -426,14 +426,12 @@ BKBaseFrame::BKBaseFrame( wxWindow* parent, wxWindowID id, const wxString& title
 	palette_ctrl_delpal_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onPaletteDelete ), NULL, this );
 	palette_ctrl_delremap_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onOverlayDelete ), NULL, this );
 	palette_ctrl_newpal_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onNewPalette ), NULL, this );
-	palette_ctrl_newremap_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onNewOverlay ), NULL, this );
 	animation_ctrl_delete_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onAnimationDelete ), NULL, this );
 	animation_ctrl_edit_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onAnimationEdit ), NULL, this );
 	animation_ctrl_add_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onAnimationAdd ), NULL, this );
 	animation_ctrl_add_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onSpriteAdd ), NULL, this );
 	animations_tree->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BKBaseFrame::onAnimTreeContextMenu ), NULL, this );
 	animations_tree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BKBaseFrame::onAnimTreeItemSelect ), NULL, this );
-	sound_table_grid->Connect( wxEVT_GRID_SELECT_CELL, wxGridEventHandler( BKBaseFrame::onSoundCellChange ), NULL, this );
 }
 
 BKBaseFrame::~BKBaseFrame()
@@ -454,13 +452,11 @@ BKBaseFrame::~BKBaseFrame()
 	palette_ctrl_delpal_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onPaletteDelete ), NULL, this );
 	palette_ctrl_delremap_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onOverlayDelete ), NULL, this );
 	palette_ctrl_newpal_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onNewPalette ), NULL, this );
-	palette_ctrl_newremap_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onNewOverlay ), NULL, this );
 	animation_ctrl_delete_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onAnimationDelete ), NULL, this );
 	animation_ctrl_edit_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onAnimationEdit ), NULL, this );
 	animation_ctrl_add_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onAnimationAdd ), NULL, this );
 	animation_ctrl_add_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onSpriteAdd ), NULL, this );
 	animations_tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BKBaseFrame::onAnimTreeContextMenu ), NULL, this );
 	animations_tree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BKBaseFrame::onAnimTreeItemSelect ), NULL, this );
-	sound_table_grid->Disconnect( wxEVT_GRID_SELECT_CELL, wxGridEventHandler( BKBaseFrame::onSoundCellChange ), NULL, this );
 	
 }

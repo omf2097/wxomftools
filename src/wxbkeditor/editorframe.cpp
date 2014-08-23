@@ -349,9 +349,18 @@ void EditorFrame::showSelectedPalette() {
     this->Thaw();
 }
 
+void EditorFrame::onNewPalette(wxCommandEvent& event) {
+    sd_palette pal;
+    sd_palette_create(&pal);
+    sd_bk_push_palette(m_filedata, &pal);
+    sd_palette_free(&pal);
+    refreshFields();
+}
+
 void EditorFrame::onChangePaletteColor(wxMouseEvent& event) {
     wxStaticText *t = (wxStaticText*)event.GetEventUserData();
-    int pal_index = wxAtoi(t->GetLabelText());
+    long pal_index;
+    t->GetLabelText().ToLong(&pal_index, 16);
 
     wxColourData d_color;
     d_color.SetColour(wxColour(
@@ -370,6 +379,7 @@ void EditorFrame::onChangePaletteColor(wxMouseEvent& event) {
     m_filedata->palettes[m_pal]->data[pal_index][1] = current.Green();
     m_filedata->palettes[m_pal]->data[pal_index][2] = current.Blue();
     showSelectedPalette();
+    updateBgImage();
 }
 
 void EditorFrame::onPaletteLoad(wxCommandEvent& event) {
