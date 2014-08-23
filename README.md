@@ -1,15 +1,15 @@
-wxBKEditor
+wxOMFTools
 ==========
 
-wxBKEditor is a graphical One Must Fall 2097 .BK file editor.
+wxOMFTools is set of wxWidgets-based tools for modifying One Must Fall 2097 datafiles.
 
 Dependencies
 ------------
 
 * libShadowDive
-* wxWidgets 2.9
+* wxWidgets 3.0
 
 License
 -------
-wxBKEditor is developed under the MIT License. Please read LICENSE for more information.
+wxOMFTools is developed under the MIT License. Please read LICENSE for more information.
 
