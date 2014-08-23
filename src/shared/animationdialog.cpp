@@ -32,7 +32,7 @@ void _cti16(wxTextCtrl *ctrl, int16_t *num) {
         return;
     }
     if(v < -0x7FFF) v = -0x7FFF;
-    if(v > 0xFFFF) v = 0x7FFF;
+    if(v > 0x7FFF) v = 0x7FFF;
     *num = v;
 }
 

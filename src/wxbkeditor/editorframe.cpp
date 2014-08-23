@@ -4,6 +4,7 @@
 #include <wx/msgdlg.h>
 #include <wx/aboutdlg.h>
 #include <wx/sizer.h>
+#include <wx/colordlg.h>
 
 #include "license.h"
 #include "editorframe.h"
@@ -333,7 +334,7 @@ void EditorFrame::showSelectedPalette() {
         // Create color area + add it to the panel
         label = new wxStaticText(panel, wxID_ANY, wxDecToHex(i));
         label->SetForegroundColour(wxColour(255,255,255));
-        //label->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(wxBKEditorFrame::onChangePaletteColor), NULL, this);
+        label->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(EditorFrame::onChangePaletteColor), label, this);
         
         sizer->Add(label, 0, wxEXPAND, 0);
         panel->SetSizer(sizer);
@@ -348,13 +349,36 @@ void EditorFrame::showSelectedPalette() {
     this->Thaw();
 }
 
+void EditorFrame::onChangePaletteColor(wxMouseEvent& event) {
+    wxStaticText *t = (wxStaticText*)event.GetEventUserData();
+    int pal_index = wxAtoi(t->GetLabelText());
+
+    wxColourData d_color;
+    d_color.SetColour(wxColour(
+        m_filedata->palettes[m_pal]->data[pal_index][0],
+        m_filedata->palettes[m_pal]->data[pal_index][1],
+        m_filedata->palettes[m_pal]->data[pal_index][2]));
+
+    wxColourDialog dlg(this, &d_color);
+    if(dlg.ShowModal() != wxID_OK) {
+        return;
+    }
+
+    wxColourData data = dlg.GetColourData();
+    wxColour current = data.GetColour();
+    m_filedata->palettes[m_pal]->data[pal_index][0] = current.Red();
+    m_filedata->palettes[m_pal]->data[pal_index][1] = current.Green();
+    m_filedata->palettes[m_pal]->data[pal_index][2] = current.Blue();
+    showSelectedPalette();
+}
+
 void EditorFrame::onPaletteLoad(wxCommandEvent& event) {
     sd_palette *pal;
     pal = sd_bk_get_palette(m_filedata, m_pal);
     if(pal == NULL) {
         wxMessageDialog md(
             this, 
-            wxString("Unable load palette; select a valid target palette first-"), 
+            wxString("Unable load palette; select a valid target palette first."), 
             _("Error"), 
             wxICON_ERROR|wxOK);
         md.ShowModal();
@@ -374,7 +398,16 @@ void EditorFrame::onPaletteLoad(wxCommandEvent& event) {
     }
 
     // Save
-    sd_palette_from_gimp_palette(pal, (char*)sd.GetPath().mb_str().data());
+    int ret = sd_palette_from_gimp_palette(pal, (char*)sd.GetPath().mb_str().data());
+    if(ret != SD_SUCCESS) {
+        wxMessageDialog md(
+            this, 
+            wxString("Error while attempting to load palette."), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+        return;
+    }
 }
 
 void EditorFrame::onPaletteSave(wxCommandEvent& event) {
@@ -403,9 +436,18 @@ void EditorFrame::onPaletteSave(wxCommandEvent& event) {
     }
 
     // Save
-    sd_palette_to_gimp_palette(
+    int ret = sd_palette_to_gimp_palette(
         m_filedata->palettes[m_pal],
         (char*)sd.GetPath().mb_str().data());
+    if(ret != SD_SUCCESS) {
+        wxMessageDialog md(
+            this, 
+            wxString("Error while attempting to save palette."), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+        return;
+    }
 }
 
 // Gets called when animation menu "edit" button is clicked.
