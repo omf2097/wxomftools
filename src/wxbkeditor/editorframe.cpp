@@ -3,6 +3,7 @@
 #include <wx/filedlg.h>
 #include <wx/msgdlg.h>
 #include <wx/aboutdlg.h>
+#include <wx/sizer.h>
 
 #include "license.h"
 #include "editorframe.h"
@@ -24,20 +25,23 @@ EditorFrame::EditorFrame(wxFrame *frame) : BKBaseFrame(frame) {
 
 EditorFrame::~EditorFrame() {
     if(m_filedata != NULL) {
-        sd_bk_delete(m_filedata);
+        sd_bk_free(m_filedata);
+        delete m_filedata;
     }
 }
 
 void EditorFrame::reset() {
     if(m_filedata != NULL) {
-        sd_bk_delete(m_filedata);
+        sd_bk_free(m_filedata);
+        delete m_filedata;
         m_filedata = NULL;
     }
     m_filename = "";
     m_pal = 0;
     m_remap = 0;
     updateTitle();
-    m_filedata = sd_bk_create();
+    m_filedata = new sd_bk_file;
+    sd_bk_create(m_filedata);
 }
 
 void EditorFrame::updateTitle() {
@@ -57,7 +61,15 @@ void EditorFrame::updateTitle() {
 void EditorFrame::onMenuSave(wxCommandEvent& event) {
     event.StopPropagation();
     
-    sd_bk_save(m_filedata, m_filename);
+    int ret = sd_bk_save(m_filedata, m_filename);
+    if(ret != SD_SUCCESS) {
+        wxMessageDialog md(
+            this, 
+            wxString("Error while attempting to save BK file."), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+    }
 }
 
 void EditorFrame::onMenuSaveAs(wxCommandEvent& event) {
@@ -70,11 +82,19 @@ void EditorFrame::onMenuSaveAs(wxCommandEvent& event) {
         _(""), 
         _("BK files (*.BK)|*.BK"), 
         wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
-    if (sd.ShowModal() != wxID_OK) {
+    if(sd.ShowModal() != wxID_OK) {
         return;
     }
     
-    sd_bk_save(m_filedata, (char*)sd.GetPath().mb_str().data());
+    int ret = sd_bk_save(m_filedata, (char*)sd.GetPath().mb_str().data());
+    if(ret != SD_SUCCESS) {
+        wxMessageDialog md(
+            this, 
+            wxString("Error while attempting to save BK file."), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+    }
 }
 
 void EditorFrame::onMenuExit(wxCommandEvent& event) {
@@ -97,24 +117,53 @@ void EditorFrame::onMenuOpen(wxCommandEvent& event) {
     
     // Open file
     wxString new_name = fd.GetPath();
-    sd_bk_file *new_data = sd_bk_create();
+    sd_bk_file *new_data = new sd_bk_file;
+    sd_bk_create(new_data);
     int success = sd_bk_load(new_data, new_name);
     if(success != SD_SUCCESS) {
         wxMessageDialog md(this, 
             wxString("Error while attempting to parse BK file."), 
             _("Error"), wxICON_ERROR|wxOK);
         md.ShowModal();
-        sd_bk_delete(new_data);
+        sd_bk_free(new_data);
         return;
     }
     
     // Kill old data & set new
     if(m_filedata != NULL) {
-        sd_bk_delete(m_filedata);
+        sd_bk_free(m_filedata);
+        delete m_filedata;
         m_filedata = NULL;
     }
     m_filedata = new_data;
     m_filename = new_name;
+    updateTitle();
+
+    // Enable items
+    this->menuitem_save->Enable(true);
+    this->menuitem_saveas->Enable(true);
+    this->base_tabs->Enable(true);
+    
+    // Refresh editor fields
+    this->refreshFields();
+    this->clearPreview();
+}
+
+void EditorFrame::onMenuNew(wxCommandEvent& event) {
+    event.StopPropagation();
+    
+    // Kill old data & set new
+    if(m_filedata != NULL) {
+        sd_bk_free(m_filedata);
+        delete m_filedata;
+        m_filedata = NULL;
+    }
+
+    // Open file
+    m_filename = wxString("New");
+    m_filedata = new sd_bk_file;
+    sd_bk_create(m_filedata);
+
     updateTitle();
 
     // Enable items
@@ -143,17 +192,25 @@ wxImage EditorFrame::RGBAtoNative(sd_rgba_image *src) {
 
 void EditorFrame::updateBgImage() {
     // Load up background image
-    sd_rgba_image *img = sd_vga_image_decode(m_filedata->background, m_filedata->palettes[m_pal], m_remap-1);
-    wxImage bgImg = RGBAtoNative(img).Scale(640, 400);
+    if(m_filedata->background == NULL)
+        return;
+    sd_rgba_image img;
+    sd_vga_image_decode(&img, m_filedata->background, m_filedata->palettes[m_pal], m_remap-1);
+    wxImage bgImg = RGBAtoNative(&img).Scale(640, 400);
     this->bg_image_bitmap->SetBitmap(wxBitmap(bgImg));
-    sd_rgba_image_delete(img);
+    sd_rgba_image_free(&img);
 }
 
 void EditorFrame::refreshFields() {
     info_value_fileid->SetValue(wxString::Format("%d", m_filedata->file_id));
-	info_value_palettec->SetLabel(wxString::Format("%d", m_filedata->num_palettes));
-	info_value_bgw->SetLabel(wxString::Format("%d", m_filedata->background->w));
-	info_value_bgh->SetLabel(wxString::Format("%d", m_filedata->background->h));
+	info_value_palettec->SetLabel(wxString::Format("%d", m_filedata->palette_count));
+    if(m_filedata->background) {
+	    info_value_bgw->SetLabel(wxString::Format("%d", m_filedata->background->w));
+	    info_value_bgh->SetLabel(wxString::Format("%d", m_filedata->background->h));
+    } else {
+	    info_value_bgw->SetLabel(_("0"));
+	    info_value_bgh->SetLabel(_("0"));
+    }
     
     int anim_num = 0;
     for(int i = 0; i < 50; i++) {
@@ -179,7 +236,7 @@ void EditorFrame::refreshFields() {
         wxTreeItemId anim_index = animations_tree->AppendItem(root_index, anim_name, -1, -1, anim_data);
 
         // Load Sprites
-        for(int n = 0; n < a->frame_count; n++) {
+        for(int n = 0; n < a->sprite_count; n++) {
             sd_sprite *s = a->sprites[n];
         
             wxString sprite_name(_("Sprite "));
@@ -190,26 +247,28 @@ void EditorFrame::refreshFields() {
     }
     
     // Palettes & overlays
-    palette_ctrl_select_palette->Clear();
-    for(int i = 0; i < m_filedata->num_palettes; i++) {
-        wxString pal_name(_("Palette "));
-        pal_name << i;
-        palette_ctrl_select_palette->Append(pal_name);
-    }
-    palette_ctrl_select_palette->SetSelection(m_pal);
+    if(m_filedata->palette_count > 0) {
+        palette_ctrl_select_palette->Clear();
+        for(int i = 0; i < m_filedata->palette_count; i++) {
+            wxString pal_name(_("Palette "));
+            pal_name << i;
+            palette_ctrl_select_palette->Append(pal_name);
+        }
+        palette_ctrl_select_palette->SetSelection(m_pal);
     
-    // Overlays
-    palette_ctrl_select_remap->Clear();
-    palette_ctrl_select_remap->Append(_("None"));
-    for(int i = 0; i < 18; i++) {
-        wxString remap_name(_("Remapping "));
-        remap_name << i;
-        palette_ctrl_select_remap->Append(remap_name);
+        // Overlays
+        palette_ctrl_select_remap->Clear();
+        palette_ctrl_select_remap->Append(_("None"));
+        for(int i = 0; i < 18; i++) {
+            wxString remap_name(_("Remapping "));
+            remap_name << i;
+            palette_ctrl_select_remap->Append(remap_name);
+        }
+        palette_ctrl_select_remap->SetSelection(m_remap);
+
+        // Show palette
+        this->showSelectedPalette();
     }
-    palette_ctrl_select_remap->SetSelection(m_remap);
-    
-    // Show palette
-    this->showSelectedPalette();
     
     // Request for refresh
     this->Refresh();
@@ -234,15 +293,25 @@ void EditorFrame::onRemapChoice(wxCommandEvent& event) {
 }
 
 void EditorFrame::showSelectedPalette() {
-    this->palette_grid_sizer->Clear(true);
-
     // Get palette table
     sd_palette *pal = m_filedata->palettes[m_pal];
 
+    this->Freeze();
+
+    // Create a sizer
+    wxFlexGridSizer *palette_grid_sizer = new wxFlexGridSizer(16, 16, 0, 0);
+    palette_grid_sizer->SetFlexibleDirection( wxBOTH );
+    palette_grid_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+    for(int i = 0; i < 16; i++) {
+        palette_grid_sizer->AddGrowableCol(i);
+        palette_grid_sizer->AddGrowableRow(i);
+    }
+
     // Draw buttons
     wxStaticText *label;
+    wxPanel *panel;
+    wxGridSizer *sizer;
     uint8_t r,g,b;
-    palette_grid_panel->Freeze();
     for(int i = 0; i < 256; i++) {
         // Find color
         if(m_remap > 0) {
@@ -255,26 +324,72 @@ void EditorFrame::showSelectedPalette() {
             b = pal->data[i][2];
         }
 
-        // Create color area + add it to the sizer
-        label = new wxStaticText(palette_grid_panel, wxID_ANY, wxDecToHex(i));
-        label->SetBackgroundColour(wxColour(r,g,b));
+        // Create a panel
+        panel = new wxPanel(palette_grid_panel, wxID_ANY);
+        panel->SetBackgroundColour(wxColour(r,g,b));
+        panel->SetForegroundColour(wxColour(r,g,b));
+        sizer = new wxGridSizer(1,1,0,0);
+
+        // Create color area + add it to the panel
+        label = new wxStaticText(panel, wxID_ANY, wxDecToHex(i));
         label->SetForegroundColour(wxColour(255,255,255));
         //label->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(wxBKEditorFrame::onChangePaletteColor), NULL, this);
-        this->palette_grid_sizer->Add(label, 1, wxEXPAND|wxALL, 0);
+        
+        sizer->Add(label, 0, wxEXPAND, 0);
+        panel->SetSizer(sizer);
+
+        // Add sizer to palette sizer
+        palette_grid_sizer->Add(panel, 0, wxEXPAND|wxALL, 0);
     }
 
     // Update panel and sizer contents
-    palette_grid_panel->Thaw();
-    this->palette_grid_panel->Layout();
-    this->palette_grid_sizer->Fit(this->palette_grid_panel);
-    this->Update();
+    palette_grid_panel->SetSizer(palette_grid_sizer);
+    palette_grid_panel->Layout();
+    this->Thaw();
 }
 
 void EditorFrame::onPaletteLoad(wxCommandEvent& event) {
+    sd_palette *pal;
+    pal = sd_bk_get_palette(m_filedata, m_pal);
+    if(pal == NULL) {
+        wxMessageDialog md(
+            this, 
+            wxString("Unable load palette; select a valid target palette first-"), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+        return;
+    }
 
+    // Ask the user where to save
+    wxFileDialog sd(this, 
+        _("GPL (Gimp Palette)"), 
+        _(""), 
+        _(""), 
+        _("GPL files (*.gpl)|*.gpl"), 
+        wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+
+    if(sd.ShowModal() != wxID_OK) {
+        return;
+    }
+
+    // Save
+    sd_palette_from_gimp_palette(pal, (char*)sd.GetPath().mb_str().data());
 }
 
 void EditorFrame::onPaletteSave(wxCommandEvent& event) {
+    sd_palette *pal;
+    pal = sd_bk_get_palette(m_filedata, m_pal);
+    if(pal == NULL) {
+        wxMessageDialog md(
+            this, 
+            wxString("Unable save palette; select a valid source palette first."), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+        return;
+    }
+
     // Ask the user where to save
     wxFileDialog sd(this, 
         _("GPL (Gimp Palette)"), 
@@ -288,7 +403,9 @@ void EditorFrame::onPaletteSave(wxCommandEvent& event) {
     }
 
     // Save
-    sd_palette_to_gimp_palette((char*)sd.GetPath().mb_str().data(), m_filedata->palettes[m_pal]);
+    sd_palette_to_gimp_palette(
+        m_filedata->palettes[m_pal],
+        (char*)sd.GetPath().mb_str().data());
 }
 
 // Gets called when animation menu "edit" button is clicked.
@@ -374,14 +491,16 @@ void EditorFrame::updateAnimationViews() {
 
 // Shows a given sprite in sprite preview wxstaticbitmap
 void EditorFrame::loadPreviewSprite(sd_sprite *sprite) {
-    sd_rgba_image *img = sd_sprite_image_decode(
-        sprite->img, 
+    sd_rgba_image img;
+    sd_sprite_rgba_decode(
+        &img,        
+        sprite, 
         m_filedata->palettes[m_pal], 
         m_remap-1);
 
     // Scale & reposition
-    int w = img->w;
-    int h = img->h;
+    int w = img.w;
+    int h = img.h;
     int nw,nh;
     if(w > h) {
         nw = 160;
@@ -393,11 +512,11 @@ void EditorFrame::loadPreviewSprite(sd_sprite *sprite) {
     int pos_x = (160 - nw) / 2;
     int pos_y = (100 - nh) / 2;
 
-    wxImage spImg = RGBAtoNative(img).Scale(nw, nh);
+    wxImage spImg = RGBAtoNative(&img).Scale(nw, nh);
     wxImage bg = wxImage(160, 100, true);
     bg.Paste(spImg, pos_x, pos_y);
     this->animations_preview_bitmap->SetBitmap(wxBitmap(bg));
-    sd_rgba_image_delete(img);
+    sd_rgba_image_free(&img);
 }
 
 void EditorFrame::clearPreview() {
@@ -416,8 +535,8 @@ void EditorFrame::showAnimationTreeInfo(wxTreeItemId id) {
 
         wxString pos_x = wxString::Format("%d", sprite->pos_x);
         wxString pos_y = wxString::Format("%d", sprite->pos_y);
-        wxString size_x = wxString::Format("%d", sprite->img->w);
-        wxString size_y = wxString::Format("%d", sprite->img->h);
+        wxString size_x = wxString::Format("%d", sprite->width);
+        wxString size_y = wxString::Format("%d", sprite->height);
         wxString index = wxString::Format("%d", sprite->index);
         wxString missing = wxString::Format("%d", sprite->missing);
         wxString content(" \
@@ -434,7 +553,7 @@ void EditorFrame::showAnimationTreeInfo(wxTreeItemId id) {
 
     } else if(item->getType() == AnimationTreeDataItem::ANIMATION) {
         sd_bk_anim *bkanim = item->getAnimation();
-        if(bkanim->animation->frame_count > 0) {
+        if(bkanim->animation->sprite_count > 0) {
             loadPreviewSprite(bkanim->animation->sprites[0]);
         }
 
@@ -495,9 +614,10 @@ void EditorFrame::onBackgroundSave(wxCommandEvent& event) {
     }
 
     // Decode and save
-    sd_rgba_image *img = sd_vga_image_decode(m_filedata->background, m_filedata->palettes[0], 0);
-    RGBAtoNative(img).SaveFile(sd.GetPath());
-    sd_rgba_image_delete(img);
+    sd_rgba_image img;
+    sd_vga_image_decode(&img, m_filedata->background, m_filedata->palettes[0], 0);
+    RGBAtoNative(&img).SaveFile(sd.GetPath());
+    sd_rgba_image_free(&img);
 }
 
 void EditorFrame::onMenuAbout(wxCommandEvent &event) {

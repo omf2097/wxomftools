@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Feb 26 2014)
+// C++ code generated with wxFormBuilder (version Jun  6 2014)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -29,6 +29,7 @@
 #include <wx/choice.h>
 #include <wx/treectrl.h>
 #include <wx/html/htmlwin.h>
+#include <wx/grid.h>
 #include <wx/aui/auibook.h>
 #include <wx/frame.h>
 
@@ -71,7 +72,6 @@ class BKBaseFrame : public wxFrame
 		wxButton* palette_ctrl_newpal_button;
 		wxButton* palette_ctrl_newremap_button;
 		wxPanel* palette_grid_panel;
-		wxFlexGridSizer* palette_grid_sizer;
 		wxPanel* tab_animations;
 		wxPanel* animations_ctrl_panel;
 		wxButton* animation_ctrl_delete_button;
@@ -82,6 +82,7 @@ class BKBaseFrame : public wxFrame
 		wxStaticBitmap* animations_preview_bitmap;
 		wxHtmlWindow* animations_preview_data;
 		wxPanel* tab_sounds;
+		wxGrid* sound_table_grid;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onMenuNew( wxCommandEvent& event ) { event.Skip(); }
@@ -106,6 +107,7 @@ class BKBaseFrame : public wxFrame
 		virtual void onSpriteAdd( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onAnimTreeContextMenu( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onAnimTreeItemSelect( wxTreeEvent& event ) { event.Skip(); }
+		virtual void onSoundCellChange( wxGridEvent& event ) { event.Skip(); }
 		
 	
 	public:

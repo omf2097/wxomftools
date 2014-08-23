@@ -2,4 +2,5 @@
 *.txt~
 *.cpp~
 *.h~
+*.bak
 build/

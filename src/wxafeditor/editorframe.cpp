@@ -23,18 +23,21 @@ EditorFrame::EditorFrame(wxFrame *frame) : AFBaseFrame(frame) {
 
 EditorFrame::~EditorFrame() {
     if(m_filedata != NULL) {
-        sd_af_delete(m_filedata);
+        sd_af_free(m_filedata);
+        delete m_filedata;
     }
 }
 
 void EditorFrame::reset() {
     if(m_filedata != NULL) {
-        sd_af_delete(m_filedata);
+        sd_af_free(m_filedata);
+        delete m_filedata;
         m_filedata = NULL;
     }
     m_filename = "";
     updateTitle();
-    m_filedata = sd_af_create();
+    m_filedata = new sd_af_file;
+    sd_af_create(m_filedata);
 }
 
 void EditorFrame::updateTitle() {
@@ -65,3 +68,4 @@ void EditorFrame::onMenuAbout(wxCommandEvent &event) {
     info.SetLicense(_(mit_license));
     wxAboutBox(info);
 }
+
