@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  6 2014)
+// C++ code generated with wxFormBuilder (version Jun  5 2014)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -121,6 +121,16 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	tab_settings->Layout();
 	tab_settings_sizer->Fit( tab_settings );
 	ani_base_notebook->AddPage( tab_settings, wxT("Settings"), true, wxNullBitmap );
+	tab_animstr = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	ani_base_notebook->AddPage( tab_animstr, wxT("Animation String"), false, wxNullBitmap );
+	tab_footerstr = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	ani_base_notebook->AddPage( tab_footerstr, wxT("Footer String"), false, wxNullBitmap );
+	tab_extrastr = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	ani_base_notebook->AddPage( tab_extrastr, wxT("Extra Strings"), false, wxNullBitmap );
+	tab_coords = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	ani_base_notebook->AddPage( tab_coords, wxT("Coordinates"), false, wxNullBitmap );
+	tab_sprites = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	ani_base_notebook->AddPage( tab_sprites, wxT("Sprites"), false, wxNullBitmap );
 	
 	animation_base_sizer->Add( ani_base_notebook, 1, wxEXPAND | wxALL, 0 );
 	

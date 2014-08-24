@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  6 2014)
+// C++ code generated with wxFormBuilder (version Jun  5 2014)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -57,6 +57,11 @@ class AnimationBaseDialog : public wxDialog
 		wxTextCtrl* start_y_field;
 		wxStaticText* static_anim_string;
 		wxTextCtrl* anim_string_field;
+		wxPanel* tab_animstr;
+		wxPanel* tab_footerstr;
+		wxPanel* tab_extrastr;
+		wxPanel* tab_coords;
+		wxPanel* tab_sprites;
 		wxStdDialogButtonSizer* ani_base_buttons;
 		wxButton* ani_base_buttonsOK;
 		wxButton* ani_base_buttonsCancel;
