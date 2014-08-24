@@ -487,6 +487,57 @@ void EditorFrame::onPaletteSave(wxCommandEvent& event) {
     }
 }
 
+// Gets called when animation menu "add sprite" button is clicked.
+void EditorFrame::onSpriteAdd(wxCommandEvent& event) {
+    wxTreeItemId id = animations_tree->GetSelection();
+    if(id.IsOk()) {
+        cbSpriteAddFunc(id);
+    }
+}
+
+// Gets called by context menu Add sprite item
+void EditorFrame::onAnimSpriteAdd(wxCommandEvent& event) {
+    event.StopPropagation();
+    if(m_last_treeindex.IsOk()) {
+        cbSpriteAddFunc(m_last_treeindex);
+    }
+}
+
+void EditorFrame::cbSpriteAddFunc(wxTreeItemId id) {
+    AnimationTreeDataItem *item = (AnimationTreeDataItem*)animations_tree->GetItemData(id);
+
+    // Make sure we have animation selected
+    if(item->getType() != AnimationTreeDataItem::ANIMATION) {
+        wxMessageDialog md(
+            this, 
+            wxString("Select an animation for the sprite first!"), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+        return;
+    }
+
+    // Add new sprite
+    sd_sprite sprite;
+    sd_sprite_create(&sprite);
+    sd_animation *ani = sd_bk_get_anim(m_filedata, item->anim_id)->animation;
+    sd_animation_push_sprite(ani, &sprite);
+    sd_sprite_free(&sprite);
+
+    // Show in tree
+    int index = ani->sprite_count - 1;
+    sd_sprite *s = ani->sprites[index];
+    wxString sprite_name(_("Sprite "));
+    sprite_name << (wxChar)(65 + index);
+    wxTreeItemData *spriteData = new AnimationTreeDataItem(s, item->anim_id, index);
+    animations_tree->AppendItem(id, sprite_name, -1, -1, spriteData);
+}
+
+// Gets called when animation menu "add animation" button is clicked.
+void EditorFrame::onAnimationAdd(wxCommandEvent& event) {
+
+}
+
 // Gets called when animation menu "edit" button is clicked.
 void EditorFrame::onAnimationEdit(wxCommandEvent& event) {
     event.StopPropagation();
@@ -680,6 +731,7 @@ void EditorFrame::onAnimTreeContextMenu(wxTreeEvent& event) {
 
     wxPoint point = ScreenToClient(wxGetMousePosition());
     m_last_treeindex = event.GetItem();
+    int type = ((AnimationTreeDataItem*)animations_tree->GetItemData(m_last_treeindex))->getType();
 
     wxMenu menu;
     wxMenuItem *editItem = new wxMenuItem(&menu, wxID_ANY, _("Edit"));
@@ -694,6 +746,16 @@ void EditorFrame::onAnimTreeContextMenu(wxTreeEvent& event) {
         wxCommandEventHandler(EditorFrame::onAnimItemDelete));
     menu.Append(editItem);
     menu.Append(deleteItem);
+
+    if(type == AnimationTreeDataItem::ANIMATION) {
+        wxMenuItem *addSpriteItem = new wxMenuItem(&menu, wxID_ANY, _("Add Sprite"));
+        this->Connect(
+            addSpriteItem->GetId(), 
+            wxEVT_COMMAND_MENU_SELECTED, 
+            wxCommandEventHandler(EditorFrame::onAnimSpriteAdd));
+        menu.Append(addSpriteItem);
+    } 
+
     PopupMenu(&menu, point.x, point.y);
 }
 

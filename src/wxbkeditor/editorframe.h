@@ -33,11 +33,14 @@ protected:
     virtual void onMenuSaveAs(wxCommandEvent& event);
     virtual void onAnimationEdit(wxCommandEvent& event);
     virtual void onAnimationDelete(wxCommandEvent& event);
-    void onSoundChange(wxGridEvent& event);
+    virtual void onSpriteAdd(wxCommandEvent& event);
+    virtual void onAnimationAdd(wxCommandEvent& event);
+    virtual void onSoundChange(wxGridEvent& event);
     
     // Local
     virtual void onAnimItemEdit(wxCommandEvent& event);
     virtual void onAnimItemDelete(wxCommandEvent& event);
+    virtual void onAnimSpriteAdd(wxCommandEvent& event);
     
 public:
     EditorFrame(wxFrame *frame);
@@ -53,6 +56,7 @@ public:
 
     void cbAnimEditFunc(wxTreeItemId id);
     void cbAnimDeleteFunc(wxTreeItemId id);
+    void cbSpriteAddFunc(wxTreeItemId id);
     void updateAnimationViews();
     void showAnimationTreeInfo(wxTreeItemId id);
     void updateBgImage();
