@@ -32,6 +32,7 @@
 #include <wx/grid.h>
 #include <wx/aui/auibook.h>
 #include <wx/frame.h>
+#include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -115,6 +116,27 @@ class BKBaseFrame : public wxFrame
 		BKBaseFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxBKEditor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,600 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~BKBaseFrame();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class NewAnimationBaseDialog
+///////////////////////////////////////////////////////////////////////////////
+class NewAnimationBaseDialog : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* new_anim_text;
+		wxTextCtrl* anim_id_field;
+		wxStdDialogButtonSizer* new_anim_buttons;
+		wxButton* new_anim_buttonsOK;
+		wxButton* new_anim_buttonsCancel;
+	
+	public:
+		
+		NewAnimationBaseDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("New Animation"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 259,174 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		~NewAnimationBaseDialog();
 	
 };
 

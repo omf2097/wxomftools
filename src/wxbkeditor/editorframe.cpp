@@ -535,7 +535,51 @@ void EditorFrame::cbSpriteAddFunc(wxTreeItemId id) {
 
 // Gets called when animation menu "add animation" button is clicked.
 void EditorFrame::onAnimationAdd(wxCommandEvent& event) {
+    NewAnimationDialog dlg(this);
+    if(dlg.ShowModal() != wxID_OK) {
+        return;
+    }
 
+    // Make sure index is correct
+    int index = dlg.getIndex();
+    if(index < 0 || index >= 50) {
+        wxMessageDialog md(
+            this, 
+            wxString("Animation index must be between 0 and 49 (inclusive)."), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+        return;
+    }
+
+    // Make sure the index doesn't already exist
+    if(sd_bk_get_anim(m_filedata, index) != NULL) {
+        wxMessageDialog md(
+            this, 
+            wxString("Animation index is reserved! Choose another one."), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+        return;
+    }
+
+    // Add new animation to index
+    sd_bk_anim bka;
+    sd_bk_anim_create(&bka);
+    sd_animation ani;
+    sd_animation_create(&ani);
+    sd_bk_anim_set_animation(&bka, &ani);
+    sd_bk_set_anim(m_filedata, index, &bka);
+    sd_bk_anim_free(&bka);
+    sd_animation_free(&ani);
+
+    // Add animation to tree
+    wxTreeItemId root_index = animations_tree->GetRootItem();
+    wxString anim_name(_("Animation "));
+    anim_name << index;
+    sd_bk_anim *n_bka = sd_bk_get_anim(m_filedata, index);
+    wxTreeItemData *anim_data = new AnimationTreeDataItem(n_bka, index);
+    animations_tree->AppendItem(root_index, anim_name, -1, -1, anim_data);
 }
 
 // Gets called when animation menu "edit" button is clicked.

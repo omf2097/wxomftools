@@ -5,6 +5,7 @@
 #include "gui.h"
 #include "animationdialog.h"
 #include "spritedialog.h"
+#include "newanimationdialog.h"
 
 class EditorFrame : public BKBaseFrame {
 protected:

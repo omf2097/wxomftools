@@ -504,3 +504,48 @@ BKBaseFrame::~BKBaseFrame()
 	sound_grid->Disconnect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( BKBaseFrame::onSoundPlay ), NULL, this );
 	
 }
+
+NewAnimationBaseDialog::NewAnimationBaseDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxFlexGridSizer* new_anim_base_sizer;
+	new_anim_base_sizer = new wxFlexGridSizer( 3, 1, 0, 0 );
+	new_anim_base_sizer->AddGrowableCol( 0 );
+	new_anim_base_sizer->AddGrowableRow( 0 );
+	new_anim_base_sizer->SetFlexibleDirection( wxBOTH );
+	new_anim_base_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	new_anim_text = new wxStaticText( this, wxID_ANY, wxT("New animation needs an identifier. Please make sure the ID is not yet in use. The new identifier must be between 0 and 49 (inclusive)."), wxDefaultPosition, wxDefaultSize, 0 );
+	new_anim_text->Wrap( -1 );
+	new_anim_base_sizer->Add( new_anim_text, 0, wxEXPAND|wxLEFT|wxRIGHT|wxTOP, 5 );
+	
+	wxStaticBoxSizer* ani_input_sizer;
+	ani_input_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Identifier") ), wxVERTICAL );
+	
+	anim_id_field = new wxTextCtrl( this, wxID_ANY, wxT("0"), wxDefaultPosition, wxDefaultSize, 0 );
+	anim_id_field->SetMaxLength( 2 ); 
+	ani_input_sizer->Add( anim_id_field, 0, wxALL, 5 );
+	
+	
+	new_anim_base_sizer->Add( ani_input_sizer, 1, wxALL|wxEXPAND, 5 );
+	
+	new_anim_buttons = new wxStdDialogButtonSizer();
+	new_anim_buttonsOK = new wxButton( this, wxID_OK );
+	new_anim_buttons->AddButton( new_anim_buttonsOK );
+	new_anim_buttonsCancel = new wxButton( this, wxID_CANCEL );
+	new_anim_buttons->AddButton( new_anim_buttonsCancel );
+	new_anim_buttons->Realize();
+	
+	new_anim_base_sizer->Add( new_anim_buttons, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	this->SetSizer( new_anim_base_sizer );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+}
+
+NewAnimationBaseDialog::~NewAnimationBaseDialog()
+{
+}
