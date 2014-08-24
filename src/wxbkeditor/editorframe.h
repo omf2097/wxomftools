@@ -10,7 +10,8 @@ class EditorFrame : public BKBaseFrame {
 protected:
     sd_bk_file *m_filedata;
     wxString m_filename;
-    
+    wxTreeItemId m_last_treeindex;
+
     int m_pal;
     int m_remap;
     

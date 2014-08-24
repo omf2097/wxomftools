@@ -233,7 +233,7 @@ void EditorFrame::refreshFields() {
         
         wxString anim_name(_("Animation "));
         anim_name << i;
-        wxTreeItemData *anim_data = new AnimationTreeDataItem(bka);
+        wxTreeItemData *anim_data = new AnimationTreeDataItem(bka, i);
         wxTreeItemId anim_index = animations_tree->AppendItem(root_index, anim_name, -1, -1, anim_data);
 
         // Load Sprites
@@ -242,7 +242,7 @@ void EditorFrame::refreshFields() {
         
             wxString sprite_name(_("Sprite "));
             sprite_name << (wxChar)(65 + n);
-            wxTreeItemData *spriteData = new AnimationTreeDataItem(s);
+            wxTreeItemData *spriteData = new AnimationTreeDataItem(s, i, n);
             animations_tree->AppendItem(anim_index, sprite_name, -1, -1, spriteData);
         }
     }
@@ -499,14 +499,8 @@ void EditorFrame::onAnimationEdit(wxCommandEvent& event) {
 // Gets called by context menu Edit item
 void EditorFrame::onAnimItemEdit(wxCommandEvent& event) {
     event.StopPropagation();
-    wxPoint m_point = EditorFrame::ScreenToClient(wxGetMousePosition());
-    wxPoint m_obj = EditorFrame::ScreenToClient(animations_tree->GetScreenPosition());
-    wxPoint r = m_point - m_obj;
-    r.y -= 10;
-
-    wxTreeItemId id = animations_tree->HitTest(r);
-    if(id.IsOk()) {
-        cbAnimEditFunc(id);
+    if(m_last_treeindex.IsOk()) {
+        cbAnimEditFunc(m_last_treeindex);
     }
 }
 
@@ -522,14 +516,8 @@ void EditorFrame::onAnimationDelete(wxCommandEvent& event) {
 // Gets called by context menu Delete item
 void EditorFrame::onAnimItemDelete(wxCommandEvent& event) {
     event.StopPropagation();
-    wxPoint m_point = EditorFrame::ScreenToClient(wxGetMousePosition());
-    wxPoint m_obj = EditorFrame::ScreenToClient(animations_tree->GetScreenPosition());
-    wxPoint r = m_point - m_obj;
-    r.y -= 10;
-
-    wxTreeItemId id = animations_tree->HitTest(r);
-    if(id.IsOk()) {
-        cbAnimDeleteFunc(id);
+    if(m_last_treeindex.IsOk()) {
+        cbAnimDeleteFunc(m_last_treeindex);
     }
 }
 
@@ -554,10 +542,45 @@ void EditorFrame::cbAnimDeleteFunc(wxTreeItemId id) {
     AnimationTreeDataItem *item = (AnimationTreeDataItem*)animations_tree->GetItemData(id);
     if(item->getType() == AnimationTreeDataItem::SPRITE) {
         //sd_sprite *sprite = item->getSprite();
+        int sprite_id = item->sprite_id;
+        int ani_id = item->anim_id;
+        sd_animation *ani = sd_bk_get_anim(m_filedata, ani_id)->animation;
 
+        // Make sure we are deleting the last item
+        if(sprite_id != ani->sprite_count-1) {
+            wxMessageDialog md(
+                this, 
+                wxString::Format("You may only remove the last sprite in animation!"), 
+                _("Error"), 
+                wxICON_ERROR|wxOK);
+            md.ShowModal();
+            return;
+        }
+
+        // Ask if we want to continue for sure.
+        wxMessageDialog md(
+            this, 
+            wxString::Format("Are you sure you wish to delete sprite index %d from animation %d ?", item->sprite_id, item->anim_id), 
+            _("Delete sprite ?"), 
+            wxICON_QUESTION|wxOK|wxCANCEL);
+
+        // If yes, kill it with fire.
+        if(md.ShowModal() == wxID_OK) {
+            sd_animation_pop_sprite(ani);
+            animations_tree->Delete(id);
+            animations_tree->Update();
+        }
     } else if(item->getType() == AnimationTreeDataItem::ANIMATION) {
-        //sd_bk_anim *animation = item->getAnimation();
-
+        wxMessageDialog md(
+            this, 
+            wxString::Format("Are you sure you wish to delete animation index %d ?", item->anim_id), 
+            _("Delete animation ?"), 
+            wxICON_QUESTION|wxOK|wxCANCEL);
+        if(md.ShowModal() == wxID_OK) {
+            sd_bk_set_anim(m_filedata, item->anim_id, NULL);
+            animations_tree->Delete(id);
+            animations_tree->Update();
+        }
     }
 }
 
@@ -656,6 +679,7 @@ void EditorFrame::onAnimTreeContextMenu(wxTreeEvent& event) {
     event.StopPropagation();
 
     wxPoint point = ScreenToClient(wxGetMousePosition());
+    m_last_treeindex = event.GetItem();
 
     wxMenu menu;
     wxMenuItem *editItem = new wxMenuItem(&menu, wxID_ANY, _("Edit"));

@@ -370,7 +370,7 @@ BKBaseFrame::BKBaseFrame( wxWindow* parent, wxWindowID id, const wxString& title
 	animations_selection_sizer->SetFlexibleDirection( wxBOTH );
 	animations_selection_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	animations_tree = new wxTreeCtrl( tab_animations, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
+	animations_tree = new wxTreeCtrl( tab_animations, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE|wxTR_SINGLE );
 	animations_selection_sizer->Add( animations_tree, 0, wxALL|wxEXPAND, 5 );
 	
 	wxFlexGridSizer* animation_preview_sizer;
