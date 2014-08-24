@@ -400,6 +400,46 @@ BKBaseFrame::BKBaseFrame( wxWindow* parent, wxWindowID id, const wxString& title
 	animations_base_sizer->Fit( tab_animations );
 	base_tabs->AddPage( tab_animations, wxT("Animations"), false, wxNullBitmap );
 	tab_sounds = new wxPanel( base_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* sounds_base_sizer;
+	sounds_base_sizer = new wxFlexGridSizer( 0, 2, 0, 0 );
+	sounds_base_sizer->AddGrowableCol( 0 );
+	sounds_base_sizer->AddGrowableRow( 0 );
+	sounds_base_sizer->SetFlexibleDirection( wxBOTH );
+	sounds_base_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	sound_grid = new wxGrid( tab_sounds, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	
+	// Grid
+	sound_grid->CreateGrid( 30, 1 );
+	sound_grid->EnableEditing( true );
+	sound_grid->EnableGridLines( true );
+	sound_grid->EnableDragGridSize( false );
+	sound_grid->SetMargins( 0, 0 );
+	
+	// Columns
+	sound_grid->SetColSize( 0, 150 );
+	sound_grid->EnableDragColMove( false );
+	sound_grid->EnableDragColSize( true );
+	sound_grid->SetColLabelSize( 25 );
+	sound_grid->SetColLabelValue( 0, wxT("BK Lookup ID") );
+	sound_grid->SetColLabelValue( 1, wxT("Sound ID") );
+	sound_grid->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Rows
+	sound_grid->EnableDragRowSize( true );
+	sound_grid->SetRowLabelSize( 25 );
+	sound_grid->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Label Appearance
+	
+	// Cell Defaults
+	sound_grid->SetDefaultCellAlignment( wxALIGN_LEFT, wxALIGN_TOP );
+	sounds_base_sizer->Add( sound_grid, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	tab_sounds->SetSizer( sounds_base_sizer );
+	tab_sounds->Layout();
+	sounds_base_sizer->Fit( tab_sounds );
 	base_tabs->AddPage( tab_sounds, wxT("Sound Table"), false, wxNullBitmap );
 	
 	base_sizer->Add( base_tabs, 1, wxEXPAND | wxALL, 0 );
@@ -432,6 +472,8 @@ BKBaseFrame::BKBaseFrame( wxWindow* parent, wxWindowID id, const wxString& title
 	animation_ctrl_add_sprite_button->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onSpriteAdd ), NULL, this );
 	animations_tree->Connect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BKBaseFrame::onAnimTreeContextMenu ), NULL, this );
 	animations_tree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BKBaseFrame::onAnimTreeItemSelect ), NULL, this );
+	sound_grid->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( BKBaseFrame::onSoundChange ), NULL, this );
+	sound_grid->Connect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( BKBaseFrame::onSoundPlay ), NULL, this );
 }
 
 BKBaseFrame::~BKBaseFrame()
@@ -458,5 +500,7 @@ BKBaseFrame::~BKBaseFrame()
 	animation_ctrl_add_sprite_button->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( BKBaseFrame::onSpriteAdd ), NULL, this );
 	animations_tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_MENU, wxTreeEventHandler( BKBaseFrame::onAnimTreeContextMenu ), NULL, this );
 	animations_tree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( BKBaseFrame::onAnimTreeItemSelect ), NULL, this );
+	sound_grid->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( BKBaseFrame::onSoundChange ), NULL, this );
+	sound_grid->Disconnect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( BKBaseFrame::onSoundPlay ), NULL, this );
 	
 }

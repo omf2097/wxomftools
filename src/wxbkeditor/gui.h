@@ -29,6 +29,7 @@
 #include <wx/choice.h>
 #include <wx/treectrl.h>
 #include <wx/html/htmlwin.h>
+#include <wx/grid.h>
 #include <wx/aui/auibook.h>
 #include <wx/frame.h>
 
@@ -81,6 +82,7 @@ class BKBaseFrame : public wxFrame
 		wxStaticBitmap* animations_preview_bitmap;
 		wxHtmlWindow* animations_preview_data;
 		wxPanel* tab_sounds;
+		wxGrid* sound_grid;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void onMenuNew( wxCommandEvent& event ) { event.Skip(); }
@@ -104,6 +106,8 @@ class BKBaseFrame : public wxFrame
 		virtual void onSpriteAdd( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onAnimTreeContextMenu( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onAnimTreeItemSelect( wxTreeEvent& event ) { event.Skip(); }
+		virtual void onSoundChange( wxGridEvent& event ) { event.Skip(); }
+		virtual void onSoundPlay( wxGridEvent& event ) { event.Skip(); }
 		
 	
 	public:

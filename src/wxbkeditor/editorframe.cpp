@@ -270,9 +270,36 @@ void EditorFrame::refreshFields() {
         // Show palette
         this->showSelectedPalette();
     }
+
+    // Update soundstable
+    for(int i = 0; i < 30; i++) {
+        unsigned char s = m_filedata->soundtable[i];
+        sound_grid->SetCellValue(i, 0, wxString::Format("%d", s));
+        sound_grid->SetColFormatNumber(i);
+    }
     
     // Request for refresh
     this->Refresh();
+}
+
+void EditorFrame::onSoundChange(wxGridEvent& event) {
+    int row = event.GetRow();
+    long value;
+    sound_grid->GetCellValue(row, 0).ToLong(&value);
+    if(value < 0 || value >= 256) {
+        wxMessageDialog md(
+            this, 
+            wxString("Sound ID must be between 0 and 255!"), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+        unsigned char s = m_filedata->soundtable[row];
+        sound_grid->SetCellValue(row, 0, wxString::Format("%d", s));
+    } else {
+        unsigned char s = value;
+        m_filedata->soundtable[row] = s;
+    }
+    this->refreshFields();
 }
 
 void EditorFrame::onPaletteChoice(wxCommandEvent& event) {

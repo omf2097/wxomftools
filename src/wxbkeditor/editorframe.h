@@ -32,6 +32,7 @@ protected:
     virtual void onMenuSaveAs(wxCommandEvent& event);
     virtual void onAnimationEdit(wxCommandEvent& event);
     virtual void onAnimationDelete(wxCommandEvent& event);
+    void onSoundChange(wxGridEvent& event);
     
     // Local
     virtual void onAnimItemEdit(wxCommandEvent& event);
