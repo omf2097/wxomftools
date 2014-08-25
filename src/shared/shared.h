@@ -24,6 +24,8 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+#include <wx/treectrl.h>
+#include <wx/grid.h>
 #include <wx/aui/auibook.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
@@ -59,14 +61,29 @@ class AnimationBaseDialog : public wxDialog
 		wxTextCtrl* start_y_field;
 		wxStaticText* static_anim_string;
 		wxTextCtrl* anim_string_field;
-		wxPanel* tab_animstr;
-		wxPanel* tab_footerstr;
-		wxPanel* tab_extrastr;
+		wxPanel* tab_strings;
+		wxPanel* m_panel13;
+		wxStaticText* m_staticText19;
+		wxTreeCtrl* string_tree;
+		wxPanel* m_panel14;
+		wxStaticText* m_staticText20;
+		wxTreeCtrl* frame_tree;
+		wxPanel* m_panel15;
+		wxStaticText* m_staticText21;
+		wxGrid* tag_grid;
 		wxPanel* tab_coords;
+		wxGrid* coord_grid;
 		wxPanel* tab_sprites;
 		wxStdDialogButtonSizer* ani_base_buttons;
 		wxButton* ani_base_buttonsOK;
 		wxButton* ani_base_buttonsCancel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void onStringSelected( wxTreeEvent& event ) { event.Skip(); }
+		virtual void onStringFrameSelected( wxTreeEvent& event ) { event.Skip(); }
+		virtual void onStringTagChange( wxGridEvent& event ) { event.Skip(); }
+		virtual void onCoordCellChange( wxGridEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		

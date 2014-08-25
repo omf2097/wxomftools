@@ -121,13 +121,153 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	tab_settings->Layout();
 	tab_settings_sizer->Fit( tab_settings );
 	ani_base_notebook->AddPage( tab_settings, wxT("Settings"), true, wxNullBitmap );
-	tab_animstr = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	ani_base_notebook->AddPage( tab_animstr, wxT("Animation String"), false, wxNullBitmap );
-	tab_footerstr = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	ani_base_notebook->AddPage( tab_footerstr, wxT("Footer String"), false, wxNullBitmap );
-	tab_extrastr = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	ani_base_notebook->AddPage( tab_extrastr, wxT("Extra Strings"), false, wxNullBitmap );
+	tab_strings = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer15;
+	fgSizer15 = new wxFlexGridSizer( 0, 3, 0, 0 );
+	fgSizer15->AddGrowableCol( 2 );
+	fgSizer15->AddGrowableRow( 0 );
+	fgSizer15->SetFlexibleDirection( wxBOTH );
+	fgSizer15->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_panel13 = new wxPanel( tab_strings, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer16;
+	fgSizer16 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer16->AddGrowableCol( 0 );
+	fgSizer16->AddGrowableRow( 1 );
+	fgSizer16->SetFlexibleDirection( wxBOTH );
+	fgSizer16->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText19 = new wxStaticText( m_panel13, wxID_ANY, wxT("Strings"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText19->Wrap( -1 );
+	fgSizer16->Add( m_staticText19, 0, wxALL, 3 );
+	
+	string_tree = new wxTreeCtrl( m_panel13, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
+	string_tree->SetMinSize( wxSize( 150,-1 ) );
+	
+	fgSizer16->Add( string_tree, 0, wxALL|wxEXPAND, 3 );
+	
+	
+	m_panel13->SetSizer( fgSizer16 );
+	m_panel13->Layout();
+	fgSizer16->Fit( m_panel13 );
+	fgSizer15->Add( m_panel13, 1, wxEXPAND | wxALL, 5 );
+	
+	m_panel14 = new wxPanel( tab_strings, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer17;
+	fgSizer17 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer17->AddGrowableCol( 0 );
+	fgSizer17->AddGrowableRow( 1 );
+	fgSizer17->SetFlexibleDirection( wxBOTH );
+	fgSizer17->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText20 = new wxStaticText( m_panel14, wxID_ANY, wxT("Frames"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText20->Wrap( -1 );
+	fgSizer17->Add( m_staticText20, 0, wxALL, 3 );
+	
+	frame_tree = new wxTreeCtrl( m_panel14, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
+	frame_tree->SetMinSize( wxSize( 150,-1 ) );
+	
+	fgSizer17->Add( frame_tree, 0, wxALL|wxEXPAND, 3 );
+	
+	
+	m_panel14->SetSizer( fgSizer17 );
+	m_panel14->Layout();
+	fgSizer17->Fit( m_panel14 );
+	fgSizer15->Add( m_panel14, 1, wxEXPAND | wxALL, 5 );
+	
+	m_panel15 = new wxPanel( tab_strings, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer18;
+	fgSizer18 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer18->AddGrowableCol( 0 );
+	fgSizer18->AddGrowableRow( 1 );
+	fgSizer18->SetFlexibleDirection( wxBOTH );
+	fgSizer18->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText21 = new wxStaticText( m_panel15, wxID_ANY, wxT("Tags"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText21->Wrap( -1 );
+	fgSizer18->Add( m_staticText21, 0, wxALL, 3 );
+	
+	tag_grid = new wxGrid( m_panel15, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	
+	// Grid
+	tag_grid->CreateGrid( 5, 2 );
+	tag_grid->EnableEditing( true );
+	tag_grid->EnableGridLines( true );
+	tag_grid->EnableDragGridSize( false );
+	tag_grid->SetMargins( 0, 0 );
+	
+	// Columns
+	tag_grid->EnableDragColMove( false );
+	tag_grid->EnableDragColSize( true );
+	tag_grid->SetColLabelSize( 30 );
+	tag_grid->SetColLabelValue( 0, wxT("Tag") );
+	tag_grid->SetColLabelValue( 1, wxT("Value") );
+	tag_grid->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Rows
+	tag_grid->AutoSizeRows();
+	tag_grid->EnableDragRowSize( true );
+	tag_grid->SetRowLabelSize( 80 );
+	tag_grid->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Label Appearance
+	
+	// Cell Defaults
+	tag_grid->SetDefaultCellAlignment( wxALIGN_LEFT, wxALIGN_TOP );
+	fgSizer18->Add( tag_grid, 0, wxALL|wxEXPAND, 3 );
+	
+	
+	m_panel15->SetSizer( fgSizer18 );
+	m_panel15->Layout();
+	fgSizer18->Fit( m_panel15 );
+	fgSizer15->Add( m_panel15, 1, wxEXPAND | wxALL, 5 );
+	
+	
+	tab_strings->SetSizer( fgSizer15 );
+	tab_strings->Layout();
+	fgSizer15->Fit( tab_strings );
+	ani_base_notebook->AddPage( tab_strings, wxT("Strings"), false, wxNullBitmap );
 	tab_coords = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer19;
+	fgSizer19 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer19->AddGrowableCol( 0 );
+	fgSizer19->AddGrowableRow( 0 );
+	fgSizer19->SetFlexibleDirection( wxBOTH );
+	fgSizer19->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	coord_grid = new wxGrid( tab_coords, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	
+	// Grid
+	coord_grid->CreateGrid( 5, 3 );
+	coord_grid->EnableEditing( true );
+	coord_grid->EnableGridLines( true );
+	coord_grid->EnableDragGridSize( false );
+	coord_grid->SetMargins( 0, 0 );
+	
+	// Columns
+	coord_grid->EnableDragColMove( false );
+	coord_grid->EnableDragColSize( true );
+	coord_grid->SetColLabelSize( 30 );
+	coord_grid->SetColLabelValue( 0, wxT("Frame ID") );
+	coord_grid->SetColLabelValue( 1, wxT("X") );
+	coord_grid->SetColLabelValue( 2, wxT("Y") );
+	coord_grid->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Rows
+	coord_grid->EnableDragRowSize( true );
+	coord_grid->SetRowLabelSize( 80 );
+	coord_grid->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Label Appearance
+	
+	// Cell Defaults
+	coord_grid->SetDefaultCellAlignment( wxALIGN_LEFT, wxALIGN_TOP );
+	fgSizer19->Add( coord_grid, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	tab_coords->SetSizer( fgSizer19 );
+	tab_coords->Layout();
+	fgSizer19->Fit( tab_coords );
 	ani_base_notebook->AddPage( tab_coords, wxT("Coordinates"), false, wxNullBitmap );
 	tab_sprites = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	ani_base_notebook->AddPage( tab_sprites, wxT("Sprites"), false, wxNullBitmap );
@@ -141,17 +281,29 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	ani_base_buttons->AddButton( ani_base_buttonsCancel );
 	ani_base_buttons->Realize();
 	
-	animation_base_sizer->Add( ani_base_buttons, 1, wxBOTTOM|wxEXPAND|wxLEFT|wxRIGHT, 5 );
+	animation_base_sizer->Add( ani_base_buttons, 1, wxALL|wxEXPAND, 5 );
 	
 	
 	this->SetSizer( animation_base_sizer );
 	this->Layout();
 	
 	this->Centre( wxBOTH );
+	
+	// Connect Events
+	string_tree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( AnimationBaseDialog::onStringSelected ), NULL, this );
+	frame_tree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( AnimationBaseDialog::onStringFrameSelected ), NULL, this );
+	tag_grid->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( AnimationBaseDialog::onStringTagChange ), NULL, this );
+	coord_grid->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( AnimationBaseDialog::onCoordCellChange ), NULL, this );
 }
 
 AnimationBaseDialog::~AnimationBaseDialog()
 {
+	// Disconnect Events
+	string_tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( AnimationBaseDialog::onStringSelected ), NULL, this );
+	frame_tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( AnimationBaseDialog::onStringFrameSelected ), NULL, this );
+	tag_grid->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( AnimationBaseDialog::onStringTagChange ), NULL, this );
+	coord_grid->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( AnimationBaseDialog::onCoordCellChange ), NULL, this );
+	
 }
 
 SpriteBaseDialog::SpriteBaseDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
@@ -326,7 +478,7 @@ SpriteBaseDialog::SpriteBaseDialog( wxWindow* parent, wxWindowID id, const wxStr
 	sprite_base_buttons->AddButton( sprite_base_buttonsCancel );
 	sprite_base_buttons->Realize();
 	
-	sprite_base_sizer->Add( sprite_base_buttons, 1, wxBOTTOM|wxEXPAND|wxLEFT|wxRIGHT, 5 );
+	sprite_base_sizer->Add( sprite_base_buttons, 1, wxALL|wxEXPAND, 5 );
 	
 	
 	this->SetSizer( sprite_base_sizer );
@@ -419,7 +571,7 @@ SpriteImportBaseDialog::SpriteImportBaseDialog( wxWindow* parent, wxWindowID id,
 	spriteimport_top_sizer->Add( spriteimport_image_panel1, 1, wxEXPAND | wxALL, 3 );
 	
 	
-	spriteimport_base_sizer->Add( spriteimport_top_sizer, 1, wxALL|wxEXPAND, 5 );
+	spriteimport_base_sizer->Add( spriteimport_top_sizer, 1, wxEXPAND, 5 );
 	
 	m_sdbSizer3 = new wxStdDialogButtonSizer();
 	m_sdbSizer3OK = new wxButton( this, wxID_OK );
@@ -428,7 +580,7 @@ SpriteImportBaseDialog::SpriteImportBaseDialog( wxWindow* parent, wxWindowID id,
 	m_sdbSizer3->AddButton( m_sdbSizer3Cancel );
 	m_sdbSizer3->Realize();
 	
-	spriteimport_base_sizer->Add( m_sdbSizer3, 1, wxBOTTOM|wxEXPAND|wxLEFT|wxRIGHT, 5 );
+	spriteimport_base_sizer->Add( m_sdbSizer3, 1, wxALL|wxEXPAND, 5 );
 	
 	
 	this->SetSizer( spriteimport_base_sizer );
