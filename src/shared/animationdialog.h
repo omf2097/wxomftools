@@ -7,6 +7,7 @@
 class AnimationDialog : public AnimationBaseDialog {
 protected:
     sd_bk_anim *m_animation;
+    sd_bk_anim m_tmp_anim;
 
 public:
     AnimationDialog(wxWindow *parent, sd_bk_anim *animation);

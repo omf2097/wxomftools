@@ -177,18 +177,18 @@ void EditorFrame::onMenuNew(wxCommandEvent& event) {
     this->clearPreview();
 }
 
-void EditorFrame::convertRGBAtoRGB(char *dst, char *src, int size) {
-    for(int i = 0; i < size; i++) {
-        dst[(i*3) + 0] = src[(i*4) + 0];
-        dst[(i*3) + 1] = src[(i*4) + 1];
-        dst[(i*3) + 2] = src[(i*4) + 2];
-    }
-}
-
 wxImage EditorFrame::RGBAtoNative(sd_rgba_image *src) {
     char *idata = (char*)malloc(src->w * src->h * 3);
-    this->convertRGBAtoRGB(idata, src->data, src->w*src->h);
-    return wxImage(src->w, src->h, (unsigned char*)idata, false);
+    char *adata = (char*)malloc(src->w * src->h);
+
+    for(unsigned int i = 0; i < src->w * src->h; i++) {
+        idata[(i*3) + 0] = src->data[(i*4) + 0];
+        idata[(i*3) + 1] = src->data[(i*4) + 1];
+        idata[(i*3) + 2] = src->data[(i*4) + 2];
+        adata[i] = src->data[(i*4) + 3];
+    }
+
+    return wxImage(src->w, src->h, (unsigned char*)idata, (unsigned char*)adata, false);
 }
 
 void EditorFrame::updateBgImage() {
@@ -620,7 +620,7 @@ void EditorFrame::cbAnimEditFunc(wxTreeItemId id) {
     AnimationTreeDataItem *item = (AnimationTreeDataItem*)animations_tree->GetItemData(id);
     if(item->getType() == AnimationTreeDataItem::SPRITE) {
         sd_sprite *sprite = item->getSprite();
-        SpriteDialog dlg(this, sprite);
+        SpriteDialog dlg(this, sprite, m_filedata->palettes[0]);
         if(dlg.ShowModal() == wxID_OK) {
             dlg.save();
         }
@@ -688,12 +688,12 @@ void EditorFrame::updateAnimationViews() {
 
 // Shows a given sprite in sprite preview wxstaticbitmap
 void EditorFrame::loadPreviewSprite(sd_sprite *sprite) {
+    sd_palette *pal = sd_bk_get_palette(m_filedata, 0);
+    if(pal == NULL)
+        return;
+
     sd_rgba_image img;
-    sd_sprite_rgba_decode(
-        &img,        
-        sprite, 
-        m_filedata->palettes[m_pal], 
-        m_remap-1);
+    sd_sprite_rgba_decode(&img, sprite, pal, m_remap-1);
 
     // Scale & reposition
     int w = img.w;
@@ -827,6 +827,36 @@ void EditorFrame::onBackgroundSave(wxCommandEvent& event) {
     sd_vga_image_decode(&img, m_filedata->background, m_filedata->palettes[0], 0);
     RGBAtoNative(&img).SaveFile(sd.GetPath());
     sd_rgba_image_free(&img);
+}
+
+void EditorFrame::onBackgroundLoad(wxCommandEvent& event) {
+    // Ask the user where to load from
+    wxFileDialog sd(this, 
+        _("PNG (PNG Image)"), 
+        _(""), 
+        _(""), 
+        _("PNG files (*.png)|*.png"), 
+        wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+    if(sd.ShowModal() != wxID_OK) {
+        return;
+    }
+
+    // Attempt to load
+    sd_vga_image img;
+    int ret = sd_vga_image_from_png(&img, (char*)sd.GetPath().mb_str().data());
+    if(ret != SD_SUCCESS) {
+        wxMessageDialog md(
+            this, 
+            wxString::Format("Error while attempting to load image. Make sure the image is a 8bit paletted PNG file smaller than 320x200 pixels."), 
+            _("Error"), 
+            wxICON_ERROR|wxOK);
+        md.ShowModal();
+        return;
+    }
+
+    sd_bk_set_background(m_filedata, &img);
+    sd_vga_image_free(&img);
+    updateBgImage();
 }
 
 void EditorFrame::onMenuAbout(wxCommandEvent &event) {

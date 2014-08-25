@@ -4,10 +4,14 @@ project(wxBKEditor CXX)
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-scripts)
 find_package(wxwidgets3)
 find_package(shadowdive)
+find_package(ZLIB)
+find_package(PNG)
 
-set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -Werror ${WX_OPTS}")
-set(CMAKE_CXX_FLAGS_DEBUG "-ggdb")
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -march=native -s")
+set(CMAKE_CXX_FLAGS "-Wall -std=c++11 ${WX_OPTS}")
+set(CMAKE_CXX_FLAGS_DEBUG "-ggdb -fno-omit-frame-pointer -Werror")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "-g -O2 -fno-omit-frame-pointer -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
+set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os -DNDEBUG")
 
 add_executable(wxbkeditor 
     src/wxbkeditor/gui.cpp
@@ -18,6 +22,8 @@ add_executable(wxbkeditor
     src/shared/shared.cpp
     src/shared/animationdialog.cpp
     src/shared/spritedialog.cpp
+    src/shared/spriteimportdialog.cpp
+    src/shared/helpers.cpp
 )
 
 add_executable(wxafeditor 
@@ -28,21 +34,26 @@ add_executable(wxafeditor
     src/shared/shared.cpp
     src/shared/animationdialog.cpp
     src/shared/spritedialog.cpp
+    src/shared/spriteimportdialog.cpp
+    src/shared/helpers.cpp
 )
 
 set(COREINCS
     src/shared/
-    ${WXWIDGETS_INCLUDE_DIR} 
-    ${SHADOWDIVE_INCLUDE_DIR} 
+    ${WXWIDGETS_INCLUDE_DIR}
+    ${SHADOWDIVE_INCLUDE_DIR}
 )
 
 set(CORELIBS
     ${WXWIDGETS_LIBRARY}
     ${SHADOWDIVE_LIBRARY}
+    ${PNG_LIBRARY}
+    ${ZLIB_LIBRARY}
 )
 
 IF(MINGW)
     set(CORELIBS mingw32 ${CORELIBS} comctl32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
 ENDIF(MINGW)
 
 include_directories(${COREINCS})

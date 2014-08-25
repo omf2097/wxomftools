@@ -22,6 +22,7 @@ protected:
     virtual void onMenuOpen(wxCommandEvent& event);
     virtual void onMenuNew(wxCommandEvent& event);
     virtual void onBackgroundSave(wxCommandEvent& event);
+    virtual void onBackgroundLoad(wxCommandEvent& event);
     virtual void onPaletteChoice(wxCommandEvent& event);
 	virtual void onRemapChoice(wxCommandEvent& event);
     virtual void onPaletteLoad(wxCommandEvent& event);
@@ -47,7 +48,6 @@ public:
     EditorFrame(wxFrame *frame);
     ~EditorFrame();
     
-    void convertRGBAtoRGB(char *dst, char *src, int size);
     wxImage RGBAtoNative(sd_rgba_image *src);
     
     void updateTitle();
