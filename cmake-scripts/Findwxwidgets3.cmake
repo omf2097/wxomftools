@@ -20,7 +20,7 @@ IF(MINGW)
         PATHS ${WXWIDGETS_SEARCH_PATHS}
     )
 
-    SET(SEARCH_LIBS wx_mswu_html-3.0 wx_mswu_adv-3.0 wx_mswu_aui-3.0 wx_mswu_core-3.0 wx_baseu-3.0 wxjpeg-3.0 wxpng-3.0 wxzlib-3.0 )
+    SET(SEARCH_LIBS wx_mswu_html-3.0 wx_mswu_adv-3.0 wx_mswu_aui-3.0 wx_mswu_core-3.0 wx_baseu-3.0 wxpng-3.0 wxzlib-3.0 )
 
     FOREACH(SLIB ${SEARCH_LIBS})
     FIND_LIBRARY(FOUND_${SLIB}_LIB ${SLIB} HINTS ${WXWIDGETS_ROOT} PATH_SUFFIXES lib64 lib bin PATHS ${WXWIDGETS_SEARCH_PATHS} )

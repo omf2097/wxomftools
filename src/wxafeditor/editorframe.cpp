@@ -16,9 +16,6 @@ EditorFrame::EditorFrame(wxFrame *frame) : AFBaseFrame(frame) {
     // Disable stuff by default
     this->menuitem_save->Enable(false);
     this->menuitem_saveas->Enable(false);
-    
-    // Load wx image handlers
-    wxImage::AddHandler(new wxPNGHandler);
 }
 
 EditorFrame::~EditorFrame() {

@@ -9,7 +9,7 @@ find_package(PNG)
 
 set(CMAKE_CXX_FLAGS "-Wall -std=c++11 ${WX_OPTS}")
 set(CMAKE_CXX_FLAGS_DEBUG "-ggdb -fno-omit-frame-pointer -Werror")
-set(CMAKE_C_FLAGS_RELWITHDEBINFO "-g -O2 -fno-omit-frame-pointer -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O2 -fno-omit-frame-pointer -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os -DNDEBUG")
 
@@ -54,7 +54,13 @@ set(CORELIBS
 IF(MINGW)
     set(CORELIBS mingw32 ${CORELIBS} comctl32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
-ENDIF(MINGW)
+
+    IF(NOT ${CMAKE_BUILD_TYPE} MATCHES "Debug")
+        set_target_properties(wxbkeditor PROPERTIES LINK_FLAGS "-mwindows")
+        set_target_properties(wxafeditor PROPERTIES LINK_FLAGS "-mwindows")
+    ENDIF()
+ENDIF()
+
 
 include_directories(${COREINCS})
 target_link_libraries(wxbkeditor ${CORELIBS})
