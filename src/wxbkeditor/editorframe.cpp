@@ -10,6 +10,12 @@
 #include "editorframe.h"
 #include "animationtreedataitem.h"
 
+class UserdataWrapper: public wxObject {
+public:
+    UserdataWrapper(void *data) : wxObject(), m_data(data) {}
+    void* m_data;
+};
+
 EditorFrame::EditorFrame(wxFrame *frame) : BKBaseFrame(frame) {
     // Initialize
     m_filedata = NULL;
@@ -361,7 +367,8 @@ void EditorFrame::showSelectedPalette() {
         // Create color area + add it to the panel
         label = new wxStaticText(panel, wxID_ANY, wxDecToHex(i));
         label->SetForegroundColour(wxColour(255,255,255));
-        label->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(EditorFrame::onChangePaletteColor), label, this);
+        UserdataWrapper *udata = new UserdataWrapper(label);
+        label->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(EditorFrame::onChangePaletteColor), udata, this);
         
         sizer->Add(label, 0, wxEXPAND, 0);
         panel->SetSizer(sizer);
@@ -385,7 +392,8 @@ void EditorFrame::onNewPalette(wxCommandEvent& event) {
 }
 
 void EditorFrame::onChangePaletteColor(wxMouseEvent& event) {
-    wxStaticText *t = (wxStaticText*)event.GetEventUserData();
+    UserdataWrapper *u = (UserdataWrapper*)event.GetEventUserData();
+    wxStaticText *t = (wxStaticText*)u->m_data;
     long pal_index;
     t->GetLabelText().ToLong(&pal_index, 16);
 
