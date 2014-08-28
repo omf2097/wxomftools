@@ -26,10 +26,10 @@
 #include <wx/icon.h>
 #include <wx/treectrl.h>
 #include <wx/grid.h>
+#include <wx/statbmp.h>
 #include <wx/aui/auibook.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
-#include <wx/statbmp.h>
 #include <wx/filepicker.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -72,8 +72,16 @@ class AnimationBaseDialog : public wxDialog
 		wxStaticText* m_staticText21;
 		wxGrid* tag_grid;
 		wxPanel* tab_coords;
+		wxPanel* m_panel131;
+		wxStaticText* m_staticText22;
+		wxTreeCtrl* sprite_tree;
+		wxPanel* m_panel141;
+		wxStaticText* m_staticText23;
 		wxGrid* coord_grid;
-		wxPanel* tab_sprites;
+		wxPanel* m_panel151;
+		wxStaticText* m_staticText24;
+		wxPanel* m_panel16;
+		wxStaticBitmap* coord_preview;
 		wxStdDialogButtonSizer* ani_base_buttons;
 		wxButton* ani_base_buttonsOK;
 		wxButton* ani_base_buttonsCancel;
@@ -82,7 +90,6 @@ class AnimationBaseDialog : public wxDialog
 		virtual void onStringSelected( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onStringFrameSelected( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onStringTagChange( wxGridEvent& event ) { event.Skip(); }
-		virtual void onCoordCellChange( wxGridEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -133,7 +140,7 @@ class SpriteBaseDialog : public wxDialog
 	
 	public:
 		
-		SpriteBaseDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Sprite"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 820,532 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		SpriteBaseDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Sprite"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,500 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~SpriteBaseDialog();
 	
 };

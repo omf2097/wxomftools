@@ -120,7 +120,7 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	tab_settings->SetSizer( tab_settings_sizer );
 	tab_settings->Layout();
 	tab_settings_sizer->Fit( tab_settings );
-	ani_base_notebook->AddPage( tab_settings, wxT("Settings"), true, wxNullBitmap );
+	ani_base_notebook->AddPage( tab_settings, wxT("Settings"), false, wxNullBitmap );
 	tab_strings = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer15;
 	fgSizer15 = new wxFlexGridSizer( 0, 3, 0, 0 );
@@ -190,7 +190,7 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	tag_grid = new wxGrid( m_panel15, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	
 	// Grid
-	tag_grid->CreateGrid( 5, 2 );
+	tag_grid->CreateGrid( 0, 2 );
 	tag_grid->EnableEditing( true );
 	tag_grid->EnableGridLines( true );
 	tag_grid->EnableDragGridSize( false );
@@ -226,19 +226,52 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	tab_strings->SetSizer( fgSizer15 );
 	tab_strings->Layout();
 	fgSizer15->Fit( tab_strings );
-	ani_base_notebook->AddPage( tab_strings, wxT("Strings"), false, wxNullBitmap );
+	ani_base_notebook->AddPage( tab_strings, wxT("Strings"), true, wxNullBitmap );
 	tab_coords = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer19;
-	fgSizer19 = new wxFlexGridSizer( 0, 1, 0, 0 );
-	fgSizer19->AddGrowableCol( 0 );
-	fgSizer19->AddGrowableRow( 0 );
-	fgSizer19->SetFlexibleDirection( wxBOTH );
-	fgSizer19->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxFlexGridSizer* coord_base_sizer;
+	coord_base_sizer = new wxFlexGridSizer( 0, 3, 0, 0 );
+	coord_base_sizer->AddGrowableCol( 2 );
+	coord_base_sizer->AddGrowableRow( 0 );
+	coord_base_sizer->SetFlexibleDirection( wxBOTH );
+	coord_base_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	coord_grid = new wxGrid( tab_coords, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_panel131 = new wxPanel( tab_coords, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer191;
+	fgSizer191 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer191->AddGrowableCol( 0 );
+	fgSizer191->AddGrowableRow( 1 );
+	fgSizer191->SetFlexibleDirection( wxBOTH );
+	fgSizer191->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText22 = new wxStaticText( m_panel131, wxID_ANY, wxT("Sprite"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText22->Wrap( -1 );
+	fgSizer191->Add( m_staticText22, 0, wxALL, 3 );
+	
+	sprite_tree = new wxTreeCtrl( m_panel131, wxID_ANY, wxDefaultPosition, wxSize( 150,-1 ), wxTR_DEFAULT_STYLE );
+	fgSizer191->Add( sprite_tree, 0, wxALL|wxEXPAND, 3 );
+	
+	
+	m_panel131->SetSizer( fgSizer191 );
+	m_panel131->Layout();
+	fgSizer191->Fit( m_panel131 );
+	coord_base_sizer->Add( m_panel131, 1, wxEXPAND | wxALL, 5 );
+	
+	m_panel141 = new wxPanel( tab_coords, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer20;
+	fgSizer20 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer20->AddGrowableCol( 0 );
+	fgSizer20->AddGrowableRow( 1 );
+	fgSizer20->SetFlexibleDirection( wxBOTH );
+	fgSizer20->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText23 = new wxStaticText( m_panel141, wxID_ANY, wxT("Coordinates"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText23->Wrap( -1 );
+	fgSizer20->Add( m_staticText23, 0, wxALL, 3 );
+	
+	coord_grid = new wxGrid( m_panel141, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	
 	// Grid
-	coord_grid->CreateGrid( 5, 3 );
+	coord_grid->CreateGrid( 0, 2 );
 	coord_grid->EnableEditing( true );
 	coord_grid->EnableGridLines( true );
 	coord_grid->EnableDragGridSize( false );
@@ -248,29 +281,65 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	coord_grid->EnableDragColMove( false );
 	coord_grid->EnableDragColSize( true );
 	coord_grid->SetColLabelSize( 30 );
-	coord_grid->SetColLabelValue( 0, wxT("Frame ID") );
-	coord_grid->SetColLabelValue( 1, wxT("X") );
-	coord_grid->SetColLabelValue( 2, wxT("Y") );
+	coord_grid->SetColLabelValue( 0, wxT("X") );
+	coord_grid->SetColLabelValue( 1, wxT("Y") );
 	coord_grid->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
 	
 	// Rows
 	coord_grid->EnableDragRowSize( true );
-	coord_grid->SetRowLabelSize( 80 );
+	coord_grid->SetRowLabelSize( 0 );
 	coord_grid->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
 	
 	// Label Appearance
 	
 	// Cell Defaults
 	coord_grid->SetDefaultCellAlignment( wxALIGN_LEFT, wxALIGN_TOP );
-	fgSizer19->Add( coord_grid, 0, wxALL|wxEXPAND, 5 );
+	fgSizer20->Add( coord_grid, 0, wxALL|wxEXPAND, 3 );
 	
 	
-	tab_coords->SetSizer( fgSizer19 );
+	m_panel141->SetSizer( fgSizer20 );
+	m_panel141->Layout();
+	fgSizer20->Fit( m_panel141 );
+	coord_base_sizer->Add( m_panel141, 1, wxEXPAND | wxALL, 5 );
+	
+	m_panel151 = new wxPanel( tab_coords, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer21;
+	fgSizer21 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer21->AddGrowableCol( 0 );
+	fgSizer21->AddGrowableRow( 1 );
+	fgSizer21->SetFlexibleDirection( wxBOTH );
+	fgSizer21->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText24 = new wxStaticText( m_panel151, wxID_ANY, wxT("Preview"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText24->Wrap( -1 );
+	fgSizer21->Add( m_staticText24, 0, wxALL, 3 );
+	
+	m_panel16 = new wxPanel( m_panel151, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_panel16->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
+	
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxVERTICAL );
+	
+	coord_preview = new wxStaticBitmap( m_panel16, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( coord_preview, 0, wxALL, 5 );
+	
+	
+	m_panel16->SetSizer( bSizer3 );
+	m_panel16->Layout();
+	bSizer3->Fit( m_panel16 );
+	fgSizer21->Add( m_panel16, 1, wxEXPAND | wxALL, 3 );
+	
+	
+	m_panel151->SetSizer( fgSizer21 );
+	m_panel151->Layout();
+	fgSizer21->Fit( m_panel151 );
+	coord_base_sizer->Add( m_panel151, 1, wxEXPAND | wxALL, 5 );
+	
+	
+	tab_coords->SetSizer( coord_base_sizer );
 	tab_coords->Layout();
-	fgSizer19->Fit( tab_coords );
+	coord_base_sizer->Fit( tab_coords );
 	ani_base_notebook->AddPage( tab_coords, wxT("Coordinates"), false, wxNullBitmap );
-	tab_sprites = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	ani_base_notebook->AddPage( tab_sprites, wxT("Sprites"), false, wxNullBitmap );
 	
 	animation_base_sizer->Add( ani_base_notebook, 1, wxEXPAND | wxALL, 0 );
 	
@@ -293,7 +362,6 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	string_tree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( AnimationBaseDialog::onStringSelected ), NULL, this );
 	frame_tree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( AnimationBaseDialog::onStringFrameSelected ), NULL, this );
 	tag_grid->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( AnimationBaseDialog::onStringTagChange ), NULL, this );
-	coord_grid->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( AnimationBaseDialog::onCoordCellChange ), NULL, this );
 }
 
 AnimationBaseDialog::~AnimationBaseDialog()
@@ -302,7 +370,6 @@ AnimationBaseDialog::~AnimationBaseDialog()
 	string_tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( AnimationBaseDialog::onStringSelected ), NULL, this );
 	frame_tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( AnimationBaseDialog::onStringFrameSelected ), NULL, this );
 	tag_grid->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( AnimationBaseDialog::onStringTagChange ), NULL, this );
-	coord_grid->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( AnimationBaseDialog::onCoordCellChange ), NULL, this );
 	
 }
 
