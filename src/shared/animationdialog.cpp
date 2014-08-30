@@ -50,6 +50,7 @@ void AnimationDialog::load_strings() {
             string_tree->AppendItem(extra_index, str_name, -1, -1, new StringTreeDataItem(EXTRA_STRING, i));
         }
     }
+    string_tree->Expand(root_index);
 }
 
 void AnimationDialog::find_frames(StringType type, int number) {
@@ -69,6 +70,7 @@ void AnimationDialog::find_frames(StringType type, int number) {
                 frame_tree->AppendItem(root_index, str_name, -1, -1, new StringTreeDataItem(type, number, i));
             }
         }
+        frame_tree->Expand(root_index);
 
         sd_script_free(&script);
     } else {

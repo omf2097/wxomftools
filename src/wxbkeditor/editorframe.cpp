@@ -249,6 +249,7 @@ void EditorFrame::refreshFields() {
             animations_tree->AppendItem(anim_index, sprite_name, -1, -1, spriteData);
         }
     }
+    animations_tree->Expand(root_index);
     
     // Palettes & overlays
     if(m_filedata->palette_count > 0) {
@@ -327,7 +328,7 @@ void EditorFrame::showSelectedPalette() {
     // Get palette table
     sd_palette *pal = m_filedata->palettes[m_pal];
 
-    this->Freeze();
+    palette_grid_panel->Freeze();
 
     // Create a sizer
     wxFlexGridSizer *palette_grid_sizer = new wxFlexGridSizer(16, 16, 0, 0);
@@ -377,7 +378,7 @@ void EditorFrame::showSelectedPalette() {
     // Update panel and sizer contents
     palette_grid_panel->SetSizer(palette_grid_sizer);
     palette_grid_panel->Layout();
-    this->Thaw();
+    palette_grid_panel->Thaw();
 }
 
 void EditorFrame::onNewPalette(wxCommandEvent& event) {
