@@ -120,7 +120,7 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	tab_settings->SetSizer( tab_settings_sizer );
 	tab_settings->Layout();
 	tab_settings_sizer->Fit( tab_settings );
-	ani_base_notebook->AddPage( tab_settings, wxT("Settings"), false, wxNullBitmap );
+	ani_base_notebook->AddPage( tab_settings, wxT("Settings"), true, wxNullBitmap );
 	tab_strings = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer15;
 	fgSizer15 = new wxFlexGridSizer( 0, 3, 0, 0 );
@@ -226,7 +226,7 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	tab_strings->SetSizer( fgSizer15 );
 	tab_strings->Layout();
 	fgSizer15->Fit( tab_strings );
-	ani_base_notebook->AddPage( tab_strings, wxT("Strings"), true, wxNullBitmap );
+	ani_base_notebook->AddPage( tab_strings, wxT("Strings"), false, wxNullBitmap );
 	tab_coords = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* coord_base_sizer;
 	coord_base_sizer = new wxFlexGridSizer( 0, 3, 0, 0 );
@@ -359,16 +359,16 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	string_tree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( AnimationBaseDialog::onStringSelected ), NULL, this );
-	frame_tree->Connect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( AnimationBaseDialog::onStringFrameSelected ), NULL, this );
+	string_tree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AnimationBaseDialog::onStringSelected ), NULL, this );
+	frame_tree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AnimationBaseDialog::onStringFrameSelected ), NULL, this );
 	tag_grid->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( AnimationBaseDialog::onStringTagChange ), NULL, this );
 }
 
 AnimationBaseDialog::~AnimationBaseDialog()
 {
 	// Disconnect Events
-	string_tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( AnimationBaseDialog::onStringSelected ), NULL, this );
-	frame_tree->Disconnect( wxEVT_COMMAND_TREE_ITEM_ACTIVATED, wxTreeEventHandler( AnimationBaseDialog::onStringFrameSelected ), NULL, this );
+	string_tree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AnimationBaseDialog::onStringSelected ), NULL, this );
+	frame_tree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AnimationBaseDialog::onStringFrameSelected ), NULL, this );
 	tag_grid->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( AnimationBaseDialog::onStringTagChange ), NULL, this );
 	
 }

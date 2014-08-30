@@ -192,7 +192,7 @@
                         <object class="auinotebookpage" expanded="0">
                             <property name="bitmap"></property>
                             <property name="label">Settings</property>
-                            <property name="select">0</property>
+                            <property name="select">1</property>
                             <object class="wxPanel" expanded="0">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
@@ -1746,7 +1746,7 @@
                         <object class="auinotebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Strings</property>
-                            <property name="select">1</property>
+                            <property name="select">0</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
@@ -2091,7 +2091,7 @@
                                                         <event name="OnTreeEndDrag"></event>
                                                         <event name="OnTreeEndLabelEdit"></event>
                                                         <event name="OnTreeGetInfo"></event>
-                                                        <event name="OnTreeItemActivated">onStringSelected</event>
+                                                        <event name="OnTreeItemActivated"></event>
                                                         <event name="OnTreeItemCollapsed"></event>
                                                         <event name="OnTreeItemCollapsing"></event>
                                                         <event name="OnTreeItemExpanded"></event>
@@ -2101,7 +2101,7 @@
                                                         <event name="OnTreeItemMiddleClick"></event>
                                                         <event name="OnTreeItemRightClick"></event>
                                                         <event name="OnTreeKeyDown"></event>
-                                                        <event name="OnTreeSelChanged"></event>
+                                                        <event name="OnTreeSelChanged">onStringSelected</event>
                                                         <event name="OnTreeSelChanging"></event>
                                                         <event name="OnTreeSetInfo"></event>
                                                         <event name="OnTreeStateImageClick"></event>
@@ -2369,7 +2369,7 @@
                                                         <event name="OnTreeEndDrag"></event>
                                                         <event name="OnTreeEndLabelEdit"></event>
                                                         <event name="OnTreeGetInfo"></event>
-                                                        <event name="OnTreeItemActivated">onStringFrameSelected</event>
+                                                        <event name="OnTreeItemActivated"></event>
                                                         <event name="OnTreeItemCollapsed"></event>
                                                         <event name="OnTreeItemCollapsing"></event>
                                                         <event name="OnTreeItemExpanded"></event>
@@ -2379,7 +2379,7 @@
                                                         <event name="OnTreeItemMiddleClick"></event>
                                                         <event name="OnTreeItemRightClick"></event>
                                                         <event name="OnTreeKeyDown"></event>
-                                                        <event name="OnTreeSelChanged"></event>
+                                                        <event name="OnTreeSelChanged">onStringFrameSelected</event>
                                                         <event name="OnTreeSelChanging"></event>
                                                         <event name="OnTreeSetInfo"></event>
                                                         <event name="OnTreeStateImageClick"></event>
