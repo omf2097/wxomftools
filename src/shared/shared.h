@@ -59,8 +59,6 @@ class AnimationBaseDialog : public wxDialog
 		wxTextCtrl* start_x_field;
 		wxStaticText* static_start_y;
 		wxTextCtrl* start_y_field;
-		wxStaticText* static_anim_string;
-		wxTextCtrl* anim_string_field;
 		wxPanel* tab_strings;
 		wxPanel* m_panel13;
 		wxStaticText* m_staticText19;
@@ -69,6 +67,11 @@ class AnimationBaseDialog : public wxDialog
 		wxStaticText* m_staticText20;
 		wxTreeCtrl* frame_tree;
 		wxPanel* m_panel15;
+		wxStaticText* m_staticText35;
+		wxStaticText* m_staticText26;
+		wxTextCtrl* frameSpriteNumberField;
+		wxStaticText* m_staticText27;
+		wxTextCtrl* frameSpriteDurationField;
 		wxStaticText* m_staticText21;
 		wxGrid* tag_grid;
 		wxPanel* tab_coords;
@@ -89,6 +92,8 @@ class AnimationBaseDialog : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void onStringSelected( wxTreeEvent& event ) { event.Skip(); }
 		virtual void onStringFrameSelected( wxTreeEvent& event ) { event.Skip(); }
+		virtual void onFrameSpriteChanged( wxCommandEvent& event ) { event.Skip(); }
+		virtual void onFrameDurationChanged( wxCommandEvent& event ) { event.Skip(); }
 		virtual void onStringTagChange( wxGridEvent& event ) { event.Skip(); }
 		
 	

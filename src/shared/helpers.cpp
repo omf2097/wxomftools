@@ -36,6 +36,14 @@ void _cti16(wxTextCtrl *ctrl, int16_t *num) {
     *num = v;
 }
 
+void _cti32(wxTextCtrl *ctrl, int *num) {
+    long v;
+    if(!ctrl->GetValue().ToLong(&v)) {
+        return;
+    }
+    *num = v;
+}
+
 void _ctb(wxTextCtrl *ctrl, uint8_t *flag) {
     long v;
     if(!ctrl->GetValue().ToLong(&v)) {

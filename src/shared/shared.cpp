@@ -90,37 +90,13 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	
 	tab_settings_sizer->Add( tab_settings_misc_sizer, wxGBPosition( 0, 0 ), wxGBSpan( 1, 1 ), wxEXPAND, 5 );
 	
-	wxStaticBoxSizer* tab_settings_string_sizer;
-	tab_settings_string_sizer = new wxStaticBoxSizer( new wxStaticBox( tab_settings, wxID_ANY, wxT("Strings") ), wxVERTICAL );
-	
-	wxFlexGridSizer* tab_settings_misc_in_sizer;
-	tab_settings_misc_in_sizer = new wxFlexGridSizer( 0, 2, 0, 0 );
-	tab_settings_misc_in_sizer->AddGrowableCol( 1 );
-	tab_settings_misc_in_sizer->SetFlexibleDirection( wxBOTH );
-	tab_settings_misc_in_sizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	static_anim_string = new wxStaticText( tab_settings, wxID_ANY, wxT("Animation string"), wxDefaultPosition, wxDefaultSize, 0 );
-	static_anim_string->Wrap( -1 );
-	tab_settings_misc_in_sizer->Add( static_anim_string, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-	
-	anim_string_field = new wxTextCtrl( tab_settings, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE );
-	anim_string_field->SetMinSize( wxSize( -1,160 ) );
-	
-	tab_settings_misc_in_sizer->Add( anim_string_field, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	tab_settings_string_sizer->Add( tab_settings_misc_in_sizer, 1, wxEXPAND, 5 );
-	
-	
-	tab_settings_sizer->Add( tab_settings_string_sizer, wxGBPosition( 0, 1 ), wxGBSpan( 1, 1 ), wxEXPAND, 5 );
-	
 	
 	tab_settings_sizer->AddGrowableCol( 1 );
 	
 	tab_settings->SetSizer( tab_settings_sizer );
 	tab_settings->Layout();
 	tab_settings_sizer->Fit( tab_settings );
-	ani_base_notebook->AddPage( tab_settings, wxT("Settings"), true, wxNullBitmap );
+	ani_base_notebook->AddPage( tab_settings, wxT("Settings"), false, wxNullBitmap );
 	tab_strings = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer15;
 	fgSizer15 = new wxFlexGridSizer( 0, 3, 0, 0 );
@@ -179,15 +155,43 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	wxFlexGridSizer* fgSizer18;
 	fgSizer18 = new wxFlexGridSizer( 0, 1, 0, 0 );
 	fgSizer18->AddGrowableCol( 0 );
-	fgSizer18->AddGrowableRow( 1 );
+	fgSizer18->AddGrowableRow( 3 );
 	fgSizer18->SetFlexibleDirection( wxBOTH );
 	fgSizer18->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText35 = new wxStaticText( m_panel15, wxID_ANY, wxT("Frame"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText35->Wrap( -1 );
+	fgSizer18->Add( m_staticText35, 0, wxALL, 5 );
+	
+	wxFlexGridSizer* fgSizer22;
+	fgSizer22 = new wxFlexGridSizer( 1, 4, 0, 0 );
+	fgSizer22->AddGrowableCol( 1 );
+	fgSizer22->AddGrowableCol( 3 );
+	fgSizer22->SetFlexibleDirection( wxBOTH );
+	fgSizer22->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText26 = new wxStaticText( m_panel15, wxID_ANY, wxT("Sprite Number:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText26->Wrap( -1 );
+	fgSizer22->Add( m_staticText26, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	frameSpriteNumberField = new wxTextCtrl( m_panel15, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer22->Add( frameSpriteNumberField, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText27 = new wxStaticText( m_panel15, wxID_ANY, wxT("Duration:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText27->Wrap( -1 );
+	fgSizer22->Add( m_staticText27, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	frameSpriteDurationField = new wxTextCtrl( m_panel15, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer22->Add( frameSpriteDurationField, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	fgSizer18->Add( fgSizer22, 1, wxEXPAND, 5 );
 	
 	m_staticText21 = new wxStaticText( m_panel15, wxID_ANY, wxT("Tags"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText21->Wrap( -1 );
 	fgSizer18->Add( m_staticText21, 0, wxALL, 3 );
 	
-	tag_grid = new wxGrid( m_panel15, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	tag_grid = new wxGrid( m_panel15, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER );
 	
 	// Grid
 	tag_grid->CreateGrid( 0, 2 );
@@ -226,7 +230,7 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	tab_strings->SetSizer( fgSizer15 );
 	tab_strings->Layout();
 	fgSizer15->Fit( tab_strings );
-	ani_base_notebook->AddPage( tab_strings, wxT("Strings"), false, wxNullBitmap );
+	ani_base_notebook->AddPage( tab_strings, wxT("Strings"), true, wxNullBitmap );
 	tab_coords = new wxPanel( ani_base_notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* coord_base_sizer;
 	coord_base_sizer = new wxFlexGridSizer( 0, 3, 0, 0 );
@@ -361,6 +365,8 @@ AnimationBaseDialog::AnimationBaseDialog( wxWindow* parent, wxWindowID id, const
 	// Connect Events
 	string_tree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AnimationBaseDialog::onStringSelected ), NULL, this );
 	frame_tree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AnimationBaseDialog::onStringFrameSelected ), NULL, this );
+	frameSpriteNumberField->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( AnimationBaseDialog::onFrameSpriteChanged ), NULL, this );
+	frameSpriteDurationField->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( AnimationBaseDialog::onFrameDurationChanged ), NULL, this );
 	tag_grid->Connect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( AnimationBaseDialog::onStringTagChange ), NULL, this );
 }
 
@@ -369,6 +375,8 @@ AnimationBaseDialog::~AnimationBaseDialog()
 	// Disconnect Events
 	string_tree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AnimationBaseDialog::onStringSelected ), NULL, this );
 	frame_tree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( AnimationBaseDialog::onStringFrameSelected ), NULL, this );
+	frameSpriteNumberField->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( AnimationBaseDialog::onFrameSpriteChanged ), NULL, this );
+	frameSpriteDurationField->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( AnimationBaseDialog::onFrameDurationChanged ), NULL, this );
 	tag_grid->Disconnect( wxEVT_GRID_CELL_CHANGE, wxGridEventHandler( AnimationBaseDialog::onStringTagChange ), NULL, this );
 	
 }

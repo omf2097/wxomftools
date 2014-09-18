@@ -64,7 +64,7 @@ void EditorFrame::updateTitle() {
 
 void EditorFrame::onMenuSave(wxCommandEvent& event) {
     event.StopPropagation();
-    
+
     int ret = sd_bk_save(m_filedata, m_filename);
     if(ret != SD_SUCCESS) {
         wxMessageDialog md(
@@ -78,7 +78,7 @@ void EditorFrame::onMenuSave(wxCommandEvent& event) {
 
 void EditorFrame::onMenuSaveAs(wxCommandEvent& event) {
     event.StopPropagation();
-    
+
     // Ask the user where to save
     wxFileDialog sd(this, 
         _("Save BK file"),
@@ -89,7 +89,7 @@ void EditorFrame::onMenuSaveAs(wxCommandEvent& event) {
     if(sd.ShowModal() != wxID_OK) {
         return;
     }
-    
+
     int ret = sd_bk_save(m_filedata, (char*)sd.GetPath().mb_str().data());
     if(ret != SD_SUCCESS) {
         wxMessageDialog md(
@@ -118,7 +118,7 @@ void EditorFrame::onMenuOpen(wxCommandEvent& event) {
     if(fd.ShowModal() != wxID_OK) {
         return;
     }
-    
+
     // Open file
     wxString new_name = fd.GetPath();
     sd_bk_file *new_data = new sd_bk_file;
@@ -132,7 +132,7 @@ void EditorFrame::onMenuOpen(wxCommandEvent& event) {
         sd_bk_free(new_data);
         return;
     }
-    
+
     // Kill old data & set new
     if(m_filedata != NULL) {
         sd_bk_free(m_filedata);
@@ -147,7 +147,7 @@ void EditorFrame::onMenuOpen(wxCommandEvent& event) {
     this->menuitem_save->Enable(true);
     this->menuitem_saveas->Enable(true);
     this->base_tabs->Enable(true);
-    
+
     // Refresh editor fields
     this->refreshFields();
     this->clearPreview();
@@ -155,7 +155,7 @@ void EditorFrame::onMenuOpen(wxCommandEvent& event) {
 
 void EditorFrame::onMenuNew(wxCommandEvent& event) {
     event.StopPropagation();
-    
+
     // Kill old data & set new
     if(m_filedata != NULL) {
         sd_bk_free(m_filedata);
@@ -174,7 +174,7 @@ void EditorFrame::onMenuNew(wxCommandEvent& event) {
     this->menuitem_save->Enable(true);
     this->menuitem_saveas->Enable(true);
     this->base_tabs->Enable(true);
-    
+
     // Refresh editor fields
     this->refreshFields();
     this->clearPreview();
@@ -215,16 +215,16 @@ void EditorFrame::refreshFields() {
 	    info_value_bgw->SetLabel(_("0"));
 	    info_value_bgh->SetLabel(_("0"));
     }
-    
+
     int anim_num = 0;
     for(int i = 0; i < 50; i++) {
         if(m_filedata->anims[i] != NULL) anim_num++;
     }
 	info_value_animationc->SetLabel(wxString::Format("%d", anim_num));
-    
+
     // Background image
     updateBgImage();
-    
+
     // Load up animations
     animations_tree->DeleteAllItems();
     wxTreeItemData *root_data = new AnimationTreeDataItem();
@@ -233,7 +233,7 @@ void EditorFrame::refreshFields() {
         if(m_filedata->anims[i] == NULL) continue;
         sd_bk_anim *bka = m_filedata->anims[i];
         sd_animation *a = bka->animation;
-        
+
         wxString anim_name(_("Animation "));
         anim_name << i;
         wxTreeItemData *anim_data = new AnimationTreeDataItem(bka, i);
@@ -242,7 +242,7 @@ void EditorFrame::refreshFields() {
         // Load Sprites
         for(int n = 0; n < a->sprite_count; n++) {
             sd_sprite *s = a->sprites[n];
-        
+
             wxString sprite_name(_("Sprite "));
             sprite_name << (wxChar)(65 + n);
             wxTreeItemData *spriteData = new AnimationTreeDataItem(s, i, n);
@@ -250,7 +250,7 @@ void EditorFrame::refreshFields() {
         }
     }
     animations_tree->Expand(root_index);
-    
+
     // Palettes & overlays
     if(m_filedata->palette_count > 0) {
         palette_ctrl_select_palette->Clear();
@@ -260,7 +260,7 @@ void EditorFrame::refreshFields() {
             palette_ctrl_select_palette->Append(pal_name);
         }
         palette_ctrl_select_palette->SetSelection(m_pal);
-    
+
         // Overlays
         palette_ctrl_select_remap->Clear();
         palette_ctrl_select_remap->Append(_("None"));
@@ -281,7 +281,7 @@ void EditorFrame::refreshFields() {
         sound_grid->SetCellValue(i, 0, wxString::Format("%d", s));
         sound_grid->SetColFormatNumber(i);
     }
-    
+
     // Request for refresh
     this->Refresh();
 }
@@ -292,9 +292,9 @@ void EditorFrame::onSoundChange(wxGridEvent& event) {
     sound_grid->GetCellValue(row, 0).ToLong(&value);
     if(value < 0 || value >= 256) {
         wxMessageDialog md(
-            this, 
-            wxString("Sound ID must be between 0 and 255!"), 
-            _("Error"), 
+            this,
+            wxString("Sound ID must be between 0 and 255!"),
+            _("Error"),
             wxICON_ERROR|wxOK);
         md.ShowModal();
         unsigned char s = m_filedata->soundtable[row];
@@ -367,7 +367,7 @@ void EditorFrame::showSelectedPalette() {
         label->SetForegroundColour(wxColour(255,255,255));
         UserdataWrapper *udata = new UserdataWrapper(label);
         label->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(EditorFrame::onChangePaletteColor), udata, this);
-        
+
         sizer->Add(label, 0, wxEXPAND, 0);
         panel->SetSizer(sizer);
 
@@ -420,20 +420,20 @@ void EditorFrame::onPaletteLoad(wxCommandEvent& event) {
     pal = sd_bk_get_palette(m_filedata, m_pal);
     if(pal == NULL) {
         wxMessageDialog md(
-            this, 
-            wxString("Unable load palette; select a valid target palette first."), 
-            _("Error"), 
+            this,
+            wxString("Unable load palette; select a valid target palette first."),
+            _("Error"),
             wxICON_ERROR|wxOK);
         md.ShowModal();
         return;
     }
 
     // Ask the user where to save
-    wxFileDialog sd(this, 
-        _("GPL (Gimp Palette)"), 
-        _(""), 
-        _(""), 
-        _("GPL files (*.gpl)|*.gpl"), 
+    wxFileDialog sd(this,
+        _("GPL (Gimp Palette)"),
+        _(""),
+        _(""),
+        _("GPL files (*.gpl)|*.gpl"),
         wxFD_OPEN|wxFD_FILE_MUST_EXIST);
 
     if(sd.ShowModal() != wxID_OK) {
@@ -444,9 +444,9 @@ void EditorFrame::onPaletteLoad(wxCommandEvent& event) {
     int ret = sd_palette_from_gimp_palette(pal, (char*)sd.GetPath().mb_str().data());
     if(ret != SD_SUCCESS) {
         wxMessageDialog md(
-            this, 
-            wxString("Error while attempting to load palette."), 
-            _("Error"), 
+            this,
+            wxString("Error while attempting to load palette."),
+            _("Error"),
             wxICON_ERROR|wxOK);
         md.ShowModal();
         return;
@@ -458,20 +458,20 @@ void EditorFrame::onPaletteSave(wxCommandEvent& event) {
     pal = sd_bk_get_palette(m_filedata, m_pal);
     if(pal == NULL) {
         wxMessageDialog md(
-            this, 
-            wxString("Unable save palette; select a valid source palette first."), 
-            _("Error"), 
+            this,
+            wxString("Unable save palette; select a valid source palette first."),
+            _("Error"),
             wxICON_ERROR|wxOK);
         md.ShowModal();
         return;
     }
 
     // Ask the user where to save
-    wxFileDialog sd(this, 
-        _("GPL (Gimp Palette)"), 
-        _(""), 
-        _(""), 
-        _("GPL files (*.gpl)|*.gpl"), 
+    wxFileDialog sd(this,
+        _("GPL (Gimp Palette)"),
+        _(""),
+        _(""),
+        _("GPL files (*.gpl)|*.gpl"),
         wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
 
     if(sd.ShowModal() != wxID_OK) {
@@ -484,9 +484,9 @@ void EditorFrame::onPaletteSave(wxCommandEvent& event) {
         (char*)sd.GetPath().mb_str().data());
     if(ret != SD_SUCCESS) {
         wxMessageDialog md(
-            this, 
-            wxString("Error while attempting to save palette."), 
-            _("Error"), 
+            this,
+            wxString("Error while attempting to save palette."),
+            _("Error"),
             wxICON_ERROR|wxOK);
         md.ShowModal();
         return;
@@ -515,9 +515,9 @@ void EditorFrame::cbSpriteAddFunc(wxTreeItemId id) {
     // Make sure we have animation selected
     if(item->getType() != AnimationTreeDataItem::ANIMATION) {
         wxMessageDialog md(
-            this, 
-            wxString("Select an animation for the sprite first!"), 
-            _("Error"), 
+            this,
+            wxString("Select an animation for the sprite first!"),
+            _("Error"),
             wxICON_ERROR|wxOK);
         md.ShowModal();
         return;
@@ -550,9 +550,9 @@ void EditorFrame::onAnimationAdd(wxCommandEvent& event) {
     int index = dlg.getIndex();
     if(index < 0 || index >= 50) {
         wxMessageDialog md(
-            this, 
-            wxString("Animation index must be between 0 and 49 (inclusive)."), 
-            _("Error"), 
+            this,
+            wxString("Animation index must be between 0 and 49 (inclusive)."),
+            _("Error"),
             wxICON_ERROR|wxOK);
         md.ShowModal();
         return;
@@ -561,9 +561,9 @@ void EditorFrame::onAnimationAdd(wxCommandEvent& event) {
     // Make sure the index doesn't already exist
     if(sd_bk_get_anim(m_filedata, index) != NULL) {
         wxMessageDialog md(
-            this, 
-            wxString("Animation index is reserved! Choose another one."), 
-            _("Error"), 
+            this,
+            wxString("Animation index is reserved! Choose another one."),
+            _("Error"),
             wxICON_ERROR|wxOK);
         md.ShowModal();
         return;
@@ -650,9 +650,9 @@ void EditorFrame::cbAnimDeleteFunc(wxTreeItemId id) {
         // Make sure we are deleting the last item
         if(sprite_id != ani->sprite_count-1) {
             wxMessageDialog md(
-                this, 
-                wxString::Format("You may only remove the last sprite in animation!"), 
-                _("Error"), 
+                this,
+                wxString::Format("You may only remove the last sprite in animation!"),
+                _("Error"),
                 wxICON_ERROR|wxOK);
             md.ShowModal();
             return;
@@ -660,9 +660,9 @@ void EditorFrame::cbAnimDeleteFunc(wxTreeItemId id) {
 
         // Ask if we want to continue for sure.
         wxMessageDialog md(
-            this, 
-            wxString::Format("Are you sure you wish to delete sprite index %d from animation %d ?", item->sprite_id, item->anim_id), 
-            _("Delete sprite ?"), 
+            this,
+            wxString::Format("Are you sure you wish to delete sprite index %d from animation %d ?", item->sprite_id, item->anim_id),
+            _("Delete sprite ?"),
             wxICON_QUESTION|wxOK|wxCANCEL);
 
         // If yes, kill it with fire.
@@ -673,9 +673,9 @@ void EditorFrame::cbAnimDeleteFunc(wxTreeItemId id) {
         }
     } else if(item->getType() == AnimationTreeDataItem::ANIMATION) {
         wxMessageDialog md(
-            this, 
-            wxString::Format("Are you sure you wish to delete animation index %d ?", item->anim_id), 
-            _("Delete animation ?"), 
+            this,
+            wxString::Format("Are you sure you wish to delete animation index %d ?", item->anim_id),
+            _("Delete animation ?"),
             wxICON_QUESTION|wxOK|wxCANCEL);
         if(md.ShowModal() == wxID_OK) {
             sd_bk_set_anim(m_filedata, item->anim_id, NULL);
@@ -787,12 +787,12 @@ void EditorFrame::onAnimTreeContextMenu(wxTreeEvent& event) {
     wxMenuItem *editItem = new wxMenuItem(&menu, wxID_ANY, _("Edit"));
     wxMenuItem *deleteItem = new wxMenuItem(&menu, wxID_ANY, _("Delete"));
     this->Connect(
-        editItem->GetId(), 
-        wxEVT_COMMAND_MENU_SELECTED, 
+        editItem->GetId(),
+        wxEVT_COMMAND_MENU_SELECTED,
         wxCommandEventHandler(EditorFrame::onAnimItemEdit));
     this->Connect(
-        deleteItem->GetId(), 
-        wxEVT_COMMAND_MENU_SELECTED, 
+        deleteItem->GetId(),
+        wxEVT_COMMAND_MENU_SELECTED,
         wxCommandEventHandler(EditorFrame::onAnimItemDelete));
     menu.Append(editItem);
     menu.Append(deleteItem);
@@ -800,11 +800,11 @@ void EditorFrame::onAnimTreeContextMenu(wxTreeEvent& event) {
     if(type == AnimationTreeDataItem::ANIMATION) {
         wxMenuItem *addSpriteItem = new wxMenuItem(&menu, wxID_ANY, _("Add Sprite"));
         this->Connect(
-            addSpriteItem->GetId(), 
-            wxEVT_COMMAND_MENU_SELECTED, 
+            addSpriteItem->GetId(),
+            wxEVT_COMMAND_MENU_SELECTED,
             wxCommandEventHandler(EditorFrame::onAnimSpriteAdd));
         menu.Append(addSpriteItem);
-    } 
+    }
 
     PopupMenu(&menu, point.x, point.y);
 }
@@ -818,11 +818,11 @@ void EditorFrame::onAnimTreeItemSelect(wxTreeEvent& event) {
 
 void EditorFrame::onBackgroundSave(wxCommandEvent& event) {
     // Ask the user where to save
-    wxFileDialog sd(this, 
-        _("PNG (Portable Network Graphics)"), 
+    wxFileDialog sd(this,
+        _("PNG (Portable Network Graphics)"),
         _(""),
-        _(""), 
-        _("PNG files (*.png)|*.png"), 
+        _(""),
+        _("PNG files (*.png)|*.png"),
         wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
     if (sd.ShowModal() != wxID_OK) {
         return;
@@ -837,11 +837,11 @@ void EditorFrame::onBackgroundSave(wxCommandEvent& event) {
 
 void EditorFrame::onBackgroundLoad(wxCommandEvent& event) {
     // Ask the user where to load from
-    wxFileDialog sd(this, 
-        _("PNG (PNG Image)"), 
-        _(""), 
-        _(""), 
-        _("PNG files (*.png)|*.png"), 
+    wxFileDialog sd(this,
+        _("PNG (PNG Image)"),
+        _(""),
+        _(""),
+        _("PNG files (*.png)|*.png"),
         wxFD_OPEN|wxFD_FILE_MUST_EXIST);
     if(sd.ShowModal() != wxID_OK) {
         return;
@@ -852,9 +852,9 @@ void EditorFrame::onBackgroundLoad(wxCommandEvent& event) {
     int ret = sd_vga_image_from_png(&img, (char*)sd.GetPath().mb_str().data());
     if(ret != SD_SUCCESS) {
         wxMessageDialog md(
-            this, 
-            wxString::Format("Error while attempting to load image. Make sure the image is a 8bit paletted PNG file smaller than 320x200 pixels."), 
-            _("Error"), 
+            this,
+            wxString::Format("Error while attempting to load image. Make sure the image is a 8bit paletted PNG file smaller than 320x200 pixels."),
+            _("Error"),
             wxICON_ERROR|wxOK);
         md.ShowModal();
         return;
